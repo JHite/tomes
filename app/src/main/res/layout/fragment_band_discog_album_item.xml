@@ -24,10 +24,10 @@
 
 
         <TextView
-            android:id="@+id/motd_body_textview"
+            android:id="@+id/fragment_band_discog_album_release"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            tools:text="@string/band_discog_album_"
+            tools:text="@string/band_discog_album_release"
             android:textColor="@color/colorAccent"/>
 
     </LinearLayout>

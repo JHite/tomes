@@ -55,6 +55,8 @@ public class SearchQueryFragment extends Fragment {
         final String searchType = getActivity().getIntent()
                 .getStringExtra(MASearchActivity.EXTRA_SEARCH_TYPE);
 
+        final String fallbackSearchType = "BAND_QUERY";
+
         //setInflated to true
         setIsInflated(true);
 
@@ -73,7 +75,12 @@ public class SearchQueryFragment extends Fragment {
                 (RadioButton)view.findViewById(R.id.search_radiobutton_artist);
         Button buttonSubmitQuery = (Button)view.findViewById(R.id.search_button_submit);
 
-        toggleSearchRadioButton(view, searchType);
+        //logic to prevent crashes in case searchType not supplied as extra
+        //I.E Back arrow from Band Info back to SearchActivity
+        if (searchType != null)
+            toggleSearchRadioButton(view, searchType);
+        else
+            toggleSearchRadioButton(view, fallbackSearchType);
 
         buttonSubmitQuery.setOnClickListener(new View.OnClickListener() {
             @Override

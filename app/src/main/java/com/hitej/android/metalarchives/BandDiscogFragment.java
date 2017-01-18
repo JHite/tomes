@@ -3,6 +3,7 @@ package com.hitej.android.metalarchives;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -20,17 +21,20 @@ import de.loki.metallum.entity.Disc;
  * Created by jhite on 11/26/16.
  */
 
-public class BandDiscogFragment  extends Fragment{
+public class BandDiscogFragment  extends Fragment {
 
     private static boolean isInflated;
     private static final String TAG = "BandDiscogFragment";
     private static List<Disc> mDiscs;
+    private DiscAdapter mAdapter;
+    private RecyclerView mDiscRecyclerView;
 
 
-    public static BandDiscogFragment newInstance(Band bandResult){
+    public static BandDiscogFragment newInstance(Band bandResult) {
         BandDiscogFragment fragment = new BandDiscogFragment();
-        //load selected Band's discograpgy into an array of disc to use in this fragment
+        //load selected Band's discography into an array of disc to use in this fragment
         mDiscs = bandResult.getDiscs();
+        Log.i(TAG, "total disc count -  " + mDiscs.size());
 
         //Bundle args = new Bundle();
        /* args.putSerializable(ARGS_BAND, (Serializable) bandResult);
@@ -43,115 +47,103 @@ public class BandDiscogFragment  extends Fragment{
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState){
+                             Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_band_discog, container, false);
 
-        final String searchType = getActivity().getIntent()
-                .getStringExtra(MASearchActivity.EXTRA_SEARCH_TYPE);
-
         //setInflated to true
+        mDiscRecyclerView
+                = (RecyclerView)view.findViewById(R.id.fragment_band_discog_recycler_view);
+        mDiscRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         setIsInflated(true);
-
-
-
-
-
-
-
+        updateUI();
 
         return view;
     }
 
     private void setupAdapter() {
         if (isAdded()) {
-            mResultsRecyclerView.setAdapter(new BandSearchResultsFragment.BandAdapter(mBandResults));
+            mDiscRecyclerView.setAdapter(new BandDiscogFragment.DiscAdapter(mDiscs));
         }
     }
     //TODO: set up RecyclerView for Disc to load as results load from query **
 
-    private class BandHolder extends RecyclerView.ViewHolder
+    private class DiscHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
-        private Band mBand;
+        private Disc mDisc;
 
         private ImageView mBandLogoImageView;
-        private TextView mBandNameText, mBandGenreText, mBandOriginText;
+        private TextView mDiscNameText, mDiscRelease, mBandOriginText;
 
 
-        public BandHolder(View itemView) {
+        public DiscHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
             //TODO:fix onclick crash
 
-            mBandNameText = (TextView)itemView.findViewById(R.id.search_results_band_name);
-            mBandGenreText = (TextView)itemView.findViewById(R.id.search_results_band_genre);
-            mBandOriginText = (TextView)itemView.findViewById(R.id.search_results_band_origin);
+            mDiscNameText = (TextView) itemView.findViewById(R.id.fragment_band_discog_album_name_textview);
+            mDiscRelease = (TextView) itemView.findViewById(R.id.fragment_band_discog_album_release);
 
         }
 
-        public void bindBand(Band band){
-            mBand = band;
-            mBandNameText.setText(mBand.getName().toString());
-            mBandGenreText.setText(mBand.getGenre().toString());
-            mBandOriginText.setText(mBand.getLocation());
-
+        public void bindDisc(Disc disc) {
+            mDisc = disc;
+            mDiscNameText.setText(mDisc.getName());
+            mDiscRelease.setText(mDisc.getReleaseDate());
         }
 
         @Override
         public void onClick(View v) {
-            Log.i(TAG, mBand.toString() + "'s BandHolder clicked");
-            // an extra to show BandAboutFragment
-            Intent intent = BandInfoActivity.newIntent(getContext(), mBand);
-            startActivity(intent);
+            Log.i(TAG, mDisc.getName() + "'s Disc clicked");
 
 
         }
     }
 
 
-    private class BandAdapter extends RecyclerView.Adapter<BandSearchResultsFragment.BandHolder> {
+    private class DiscAdapter extends RecyclerView.Adapter<BandDiscogFragment.DiscHolder> {
 
-        //private List<Band> mBandList;
 
-        public BandAdapter(List<Band> bandItems) {
-            mBandResults = bandItems;
+        public DiscAdapter(List<Disc> discsItems) {
+            mDiscs = discsItems;
         }
 
 
         @Override
-        public BandSearchResultsFragment.BandHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        public BandDiscogFragment.DiscHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View view = inflater.inflate(R.layout.fragment_band_search_results_item, viewGroup, false);
-            return new BandSearchResultsFragment.BandHolder(view);
+            View view = inflater.inflate(R.layout.fragment_band_discog_album_item, viewGroup, false);
+            return new BandDiscogFragment.DiscHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(BandSearchResultsFragment.BandHolder bandHolder, int position) {
-            //Band band = mBandList.get(position);
-            Band bandResult = mBandResults.get(position);
-            bandHolder.bindBand(bandResult);
+        public void onBindViewHolder(BandDiscogFragment.DiscHolder discHolder, int position) {
+            Disc disc = mDiscs.get(position);
+            discHolder.bindDisc(disc);
 
         }
 
         @Override
         public int getItemCount() {
-            return mBandResults.size();
+            return mDiscs.size();
         }
 
+    }
+
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
         setIsInflated(false);
     }
 
     @Override
-    public void onSaveInstanceState(Bundle outState){
+    public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
 
     }
@@ -160,7 +152,17 @@ public class BandDiscogFragment  extends Fragment{
         return isInflated;
     }
 
-    public static void setIsInflated(boolean isInflated) {
+    public void setIsInflated(boolean isInflated) {
         BandDiscogFragment.isInflated = isInflated;
+    }
+
+    public void updateUI(){
+        if(mAdapter == null){
+            mAdapter = new DiscAdapter(mDiscs);
+            mDiscRecyclerView.setAdapter(mAdapter);
+        } else{
+            //may need more here
+            mAdapter.notifyDataSetChanged();
+        }
     }
 }
