@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/bottom_bar_band_about"
+          android:icon="@drawable/ic_home_black_24dp"
+          android:title="About" />
+    <item android:id="@+id/bottom_bar_band_discography"
+          android:icon="@drawable/ic_favorite_black_24dp"
+          android:title="Discography" />
+    <item android:id="@+id/bottom_bar_tab_band_members"
+          android:icon="@drawable/ic_explore_black_24dp"
+          android:title="Members" />
+    <item android:id="@+id/bottom_bar_band_reviews"
+          android:icon="@drawable/ic_favorite_black_24dp"
+          android:title="Reviews" />
+    <item android:id="@+id/bottom_bar_band_similar_artists"
+          android:icon="@drawable/ic_home_black_24dp"
+          android:title="Similar Artist" />
+
+</menu>
