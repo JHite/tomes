@@ -12,10 +12,11 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import java.util.List;
+import com.github.loki.afro.metallum.entity.Band;
+import com.github.loki.afro.metallum.entity.Disc;
 
-import de.loki.metallum.entity.Band;
-import de.loki.metallum.entity.Disc;
+import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by jhite on 11/26/16.
@@ -66,12 +67,14 @@ public class BandDiscogFragment  extends Fragment {
         return view;
     }
 
+    /*
+    1-18 - Don't believe this method is neccessary
     private void setupAdapter() {
         if (isAdded()) {
             mDiscRecyclerView.setAdapter(new BandDiscogFragment.DiscAdapter(mDiscs));
         }
     }
-    //TODO: set up RecyclerView for Disc to load as results load from query **
+    */
 
     private class DiscHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
@@ -100,7 +103,10 @@ public class BandDiscogFragment  extends Fragment {
 
         @Override
         public void onClick(View v) {
+            //TODO:7-4-14: Launch DiscInfoActivity with mDisc
             Log.i(TAG, mDisc.getName() + "'s Disc clicked");
+            Intent intent = DiscInfoActivity.newIntent(getContext(), mDisc);
+            startActivity(intent);
 
 
         }

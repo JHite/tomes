@@ -2,12 +2,12 @@ package com.hitej.android.metalarchives;
 
 import android.util.Log;
 
-import java.util.List;
+import com.github.loki.afro.metallum.entity.Band;
+import com.github.loki.afro.metallum.search.query.BandSearchQuery;
+import com.github.loki.afro.metallum.search.service.advanced.BandSearchService;
 
-import de.loki.metallum.MetallumException;
-import de.loki.metallum.entity.Band;
-import de.loki.metallum.search.query.BandSearchQuery;
-import de.loki.metallum.search.service.advanced.BandSearchService;
+
+import java.util.List;
 
 /**
  * Created by jhite on 6/5/16.
@@ -16,7 +16,7 @@ public class SearchQuery {
 
     private final String TAG = "SearchQuery";
 
-    public List<Band> getBands() {
+    protected List<Band> getBands() {
         //6/4 -  create method to get search results
         //       preferably in its own helper class
 
@@ -24,19 +24,20 @@ public class SearchQuery {
         final BandSearchQuery bandSearchQuery = new BandSearchQuery();
 
         //set bandSearchQuerys band name to query text and exact match's boolean to false to get all
-        //results
+        //results instead of exact results
 
         bandSearchQuery.setBandName(BandSearchResultsFragment.getQueryText(), false);
         try{
             final List<Band> resultBandList = bandSearchService.performSearch(bandSearchQuery);
+            Log.i(TAG, resultBandList.size()+ " = size of search Result List ");
             for(final Band band : resultBandList) {
                 Log.i(TAG, "Band name = " + band.getName());
                 Log.i(TAG, "Band Genre = " + band.getGenre());
                 Log.i(TAG, "end of current band \n --------");
-
-
-                return resultBandList;
             }
+
+            return resultBandList;
+
         //} catch (MetallumException e ) {
         } catch (Exception e ) {
             Log.i(TAG, e.toString());}

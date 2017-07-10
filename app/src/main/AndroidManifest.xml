@@ -29,6 +29,9 @@
         <activity android:name=".BandInfoActivity"
                   android:label="Band Info Activity"
                   android:parentActivityName=".MASearchActivity" />
+        <activity android:name=".DiscInfoActivity"
+                  android:label="Disc Info Activiy"
+                  android:parentActivityName=".BandInfoActivity"/>
     </application>
 
 </manifest>

@@ -2,18 +2,18 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android">
     <item android:id="@+id/bottom_bar_band_about"
           android:icon="@drawable/ic_home_black_24dp"
-          android:title="About" />
+          android:title="@string/band_info_bottom_bar_about" />
     <item android:id="@+id/bottom_bar_band_discography"
           android:icon="@drawable/ic_favorite_black_24dp"
-          android:title="Discography" />
+          android:title="@string/band_info_bottom_bar_discography" />
     <item android:id="@+id/bottom_bar_tab_band_members"
           android:icon="@drawable/ic_explore_black_24dp"
-          android:title="Members" />
+          android:title="@string/band_info_bottom_bar_members" />
     <item android:id="@+id/bottom_bar_band_reviews"
           android:icon="@drawable/ic_favorite_black_24dp"
-          android:title="Reviews" />
+          android:title="@string/band_info_bottom_bar_reviews" />
     <item android:id="@+id/bottom_bar_band_similar_artists"
           android:icon="@drawable/ic_home_black_24dp"
-          android:title="Similar Artist" />
+          android:title="@string/band_info_bottom_bar_similarartists" />
 
 </menu>

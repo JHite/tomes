@@ -16,13 +16,12 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
+import com.github.loki.afro.metallum.entity.Band;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 import com.roughike.bottombar.OnTabClickListener;
 
-import de.loki.metallum.entity.Band;
 
-//TODO: when does an variable/class need to be static??
 public class BandInfoActivity extends SingleFragmentActivity {
 
     private static final String TAG = "BandInfoActivity";
@@ -31,9 +30,10 @@ public class BandInfoActivity extends SingleFragmentActivity {
     protected static Band mBand; // reference to the band to display info about
 
 
+    /*      un-used
     public static Intent newIntent(Context context) {
         return new Intent(context, BandInfoActivity.class);
-    }
+    }*/
 
     public static Intent newIntent(Context context, Band band) {
         mBand = band;

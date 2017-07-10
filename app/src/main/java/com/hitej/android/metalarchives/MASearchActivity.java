@@ -6,8 +6,6 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
-import de.loki.metallum.entity.Band;
-
 /**
  * Created by jhite on 5/18/16.
  *

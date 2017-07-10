@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/bottom_bar_discinfo_about"
+          android:icon="@drawable/ic_home_black_24dp"
+          android:title="@string/disc_info_bottombar_about" />
+    <item android:id="@+id/bottom_bar_discinfo_songs"
+          android:icon="@drawable/ic_favorite_black_24dp"
+          android:title="@string/disc_info_bottombar_songs" />
+    <item android:id="@+id/bottom_bar_discinfo_lineup"
+          android:icon="@drawable/ic_explore_black_24dp"
+          android:title="@string/disc_info_bottombar_lineup" />
+    <item android:id="@+id/bottom_bar_discinfo_reviews"
+          android:icon="@drawable/ic_explore_black_24dp"
+          android:title="@string/disc_info_bottombar_versions" />
+
+
+</menu>

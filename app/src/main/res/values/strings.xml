@@ -28,6 +28,26 @@
     <string name="band_discog_album_title">Album Title</string>
     <string name="band_discog_album_release">Album Release</string>
 
+    <!--- Strings for BandInfoActivity's BottomBar -->
+    <string name="band_info_bottom_bar_about">About</string>
+    <string name="band_info_bottom_bar_discography">Discography</string>
+    <string name="band_info_bottom_bar_members">Members</string>
+    <string name="band_info_bottom_bar_reviews">Reviews</string>
+    <string name="band_info_bottom_bar_similarartists">Similar Artists</string>
+
+
+    <!-- Strings for DiscInfoActivity -->
+    <string name="disc_info_bottombar_about">About</string>
+    <string name="disc_info_bottombar_songs">Songs</string>
+    <string name="disc_info_bottombar_lineup">Lineup</string>
+    <string name="disc_info_bottombar_reviews">Reviews</string>
+    <string name="disc_info_bottombar_versions">Versions</string>
+
+    <!--Strings for DiscInfoFragment -->
+    <string name="disc_info_fragment_title">Title</string>
+
+    <!-- Strings for DiscInfoSongsFragment -->
+
 
 
 </resources>

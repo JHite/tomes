@@ -1,6 +1,5 @@
 package com.hitej.android.metalarchives;
 
-import android.content.ContentResolver;
 import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;

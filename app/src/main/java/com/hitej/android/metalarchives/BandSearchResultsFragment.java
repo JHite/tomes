@@ -12,14 +12,16 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.github.loki.afro.metallum.entity.Band;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-import de.loki.metallum.entity.Band;
-import rx.Observable;
-import rx.android.schedulers.AndroidSchedulers;
-import rx.schedulers.Schedulers;
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+
 
 /**
  * Created by jhite on 5/23/16.
@@ -39,7 +41,7 @@ public class BandSearchResultsFragment extends Fragment {
     private RecyclerView mResultsRecyclerView;
 
     private List<Band> mBandResults = new ArrayList<>();
-    //private List<BandResult> mBandResults = new ArrayList<>();
+    private SearchQuery mSearchQuery = new SearchQuery();
 
 
 
@@ -69,6 +71,7 @@ public class BandSearchResultsFragment extends Fragment {
 
         searchType = getArguments().getString(ARG_SEARCH_TYPE);
         queryText = getArguments().getString(ARG_QUERY_TEXT);
+        Log.i(TAG, queryText + " is text placed in search query");
 
         //save the output of the search query into a list of bandResults
         /* OG Search code
@@ -79,19 +82,16 @@ public class BandSearchResultsFragment extends Fragment {
         * */
 
         //add band search results to a list to display when fragment is inflated
-        Observable.from(new SearchQuery().getBands())
-                .subscribeOn(Schedulers.io())
+        Observable.fromIterable(mSearchQuery.getBands())
+                .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(b -> mBandResults.add(b));
 
-
-        // 1-5-17: what is this list for?
-        List<BandSearchResultsFragment.BandResult> mBandResultsList
-                = (List<BandSearchResultsFragment.BandResult>)(List<?>) mBandResults;
+        }
 
 
 
-    }
+
 
     @Override
     public View onCreateView(LayoutInflater inflater,
@@ -179,7 +179,6 @@ public class BandSearchResultsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(BandHolder bandHolder, int position) {
-            //Band band = mBandList.get(position);
             Band bandResult = mBandResults.get(position);
             bandHolder.bindBand(bandResult);
 

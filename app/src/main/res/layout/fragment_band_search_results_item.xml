@@ -1,6 +1,5 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
     xmlns:cardview="http://schemas.android.com/apk/res-auto"
     android:id="@+id/motd_cardview"
     android:layout_gravity="center"

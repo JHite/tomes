@@ -6,12 +6,12 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
-import de.loki.metallum.entity.Band;
+import com.github.loki.afro.metallum.entity.Band;
 
 /**
  * Created by jhite on 7/14/16
  *
- * Hosts all individual search result fragments (ie singleband, album, ect
+ * Hosts all individual search result fragments (ie singleband, album, ect)
  */
 
 public class MASearchResultsActivity extends SingleFragmentActivity {
@@ -72,11 +72,11 @@ public class MASearchResultsActivity extends SingleFragmentActivity {
     //(7/3) The below will decide which fragment to show based upon search typed decided in
     // SearchQueryFragment's buttonSubmitQuery
 
+
     public void showBandSearchResults( String queryTextString){
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container
                         , BandSearchResultsFragment.newInstance(queryTextString))
-                //TODO: pack query properly and use proper method
                 .commit();
     }
 }
