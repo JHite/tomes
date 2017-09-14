@@ -13,6 +13,10 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.github.loki.afro.metallum.entity.Band;
+import com.github.loki.afro.metallum.search.query.BandSearchQuery;
+import com.hitej.android.metalarchives.adapters.BandSearchResultsAdapter;
+import com.hitej.android.metalarchives.metallumobjects.search.bandname.SearchResult;
+import com.hitej.android.metalarchives.net.searchqueries.BandNameQuery;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -20,6 +24,7 @@ import java.util.List;
 
 import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
 
 
@@ -40,9 +45,9 @@ public class BandSearchResultsFragment extends Fragment {
 
     private RecyclerView mResultsRecyclerView;
 
-    private List<Band> mBandResults = new ArrayList<>();
-    private SearchQuery mSearchQuery = new SearchQuery();
-
+    private ArrayList<SearchResult> mBandResults = new ArrayList<>();
+    private BandNameQuery mSearchQuery;
+    private CompositeDisposable mCompositeDisposable;
 
 
     public static BandSearchResultsFragment newInstance() {
@@ -73,19 +78,12 @@ public class BandSearchResultsFragment extends Fragment {
         queryText = getArguments().getString(ARG_QUERY_TEXT);
         Log.i(TAG, queryText + " is text placed in search query");
 
-        //save the output of the search query into a list of bandResults
-        /* OG Search code
-        * Observable.from(new SearchQuery().getBands())
-                .subscribeOn(Schedulers.io())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(band -> mBandResults.add(band));
-        * */
+        mCompositeDisposable = new CompositeDisposable();
+
 
         //add band search results to a list to display when fragment is inflated
-        Observable.fromIterable(mSearchQuery.getBands())
-                .subscribeOn(Schedulers.newThread())
-                .observeOn(AndroidSchedulers.mainThread())
-                .subscribe(b -> mBandResults.add(b));
+        mSearchQuery = new BandNameQuery(queryText);
+        mSearchQuery.start();
 
         }
 
@@ -109,7 +107,11 @@ public class BandSearchResultsFragment extends Fragment {
 
     }
 
-
+    @Override
+    public void onDestroy(){
+        super.onDestroy();
+        mCompositeDisposable.clear();
+    }
 
     public static String getQueryText() {
         return queryText;
@@ -117,10 +119,12 @@ public class BandSearchResultsFragment extends Fragment {
 
     private void setupAdapter() {
         if (isAdded()) {
-            mResultsRecyclerView.setAdapter(new BandAdapter(mBandResults));
+            mResultsRecyclerView.setAdapter(new BandSearchResultsAdapter(mBandResults));
         }
     }
 
+
+    /*
     private class BandHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
@@ -133,7 +137,7 @@ public class BandSearchResultsFragment extends Fragment {
         public BandHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
-            //TODO:fix onclick crash
+
 
             mBandNameText = (TextView)itemView.findViewById(R.id.search_results_band_name);
             mBandGenreText = (TextView)itemView.findViewById(R.id.search_results_band_genre);
@@ -191,14 +195,6 @@ public class BandSearchResultsFragment extends Fragment {
 
     }
 
-        protected class BandResult extends Band
-            implements Serializable{
-        /*
-        * Created in attempt to pass BandResult as a serializable extra
-        *
-        *
-        **/
-    }
 
 
     public static boolean isInflated() {
@@ -208,4 +204,5 @@ public class BandSearchResultsFragment extends Fragment {
     public static void setIsInflated(boolean isInflated) {
         BandSearchResultsFragment.isInflated = isInflated;
     }
+    */
 }

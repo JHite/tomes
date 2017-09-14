@@ -27,21 +27,20 @@ android {
             jackOptions{
             enabled(true)
         }
+    }
 
-        }
-
-        compileOptions {
+    compileOptions {
         sourceCompatibility JavaVersion.VERSION_1_8
         targetCompatibility JavaVersion.VERSION_1_8
     }
 
 
-        buildTypes {
+    buildTypes {
             release {
                 minifyEnabled false
                 proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
             }
-        }
+    }
         packagingOptions {
             exclude 'META-INF/NOTICE' // will not include NOTICE file
             exclude 'META-INF/LICENSE' // will not include LICENSE file
@@ -108,6 +107,13 @@ android {
         // Because RxAndroid releases are few and far between, it is recommended you also
         // explicitly depend on RxJava's latest version for bug fixes and new features.
         compile 'io.reactivex.rxjava2:rxjava:2.1.1'
+
+        //retrofit + adapters
+        compile 'com.squareup.retrofit2:retrofit:2.3.0'
+        compile 'com.squareup.retrofit2:adapter-java8:2.3.0'
+        compile 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+        compile 'com.squareup.retrofit2:converter-gson:2.3.0'
+        compile 'com.squareup.okhttp3:logging-interceptor:3.3.0'
 
         //required for Espresso and testing
         //androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'

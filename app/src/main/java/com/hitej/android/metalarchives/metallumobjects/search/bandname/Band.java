@@ -11,7 +11,7 @@ public class Band {
     private String query;
     @SerializedName("search_results")
     @Expose
-    private List<SearchResult> searchResults = null;
+    private List<SearchResultTest> searchResults = null;
 
     public String getQuery() {
         return query;
@@ -21,11 +21,11 @@ public class Band {
         this.query = query;
     }
 
-    public List<SearchResult> getSearchResults() {
+    public List<SearchResultTest> getSearchResults() {
         return searchResults;
     }
 
-    public void setSearchResults(List<SearchResult> searchResults) {
+    public void setSearchResults(List<SearchResultTest> searchResults) {
         this.searchResults = searchResults;
     }
 
