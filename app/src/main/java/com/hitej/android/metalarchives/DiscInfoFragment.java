@@ -13,9 +13,7 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.github.loki.afro.metallum.entity.Band;
-import com.github.loki.afro.metallum.entity.Disc;
-import com.github.loki.afro.metallum.entity.Track;
+
 
 import java.io.Serializable;
 import java.util.List;
@@ -26,6 +24,7 @@ import java.util.List;
  */
 
 public class DiscInfoFragment extends Fragment{
+    /*
     private static Disc mDisc;
     private static Band mBandResult;
     private List<Track> mTrackList;
@@ -33,16 +32,19 @@ public class DiscInfoFragment extends Fragment{
     private static boolean isInflated = false;
     private TrackAdapter mAdapter;
     private static final String TAG = "DiscInfoFragment";
+    */
 
     public static DiscInfoFragment newInstance(){
         return new DiscInfoFragment();
     }
 
+    /*
     public static DiscInfoFragment newInstance(Disc disc){
         DiscInfoFragment fragment = newInstance();
         DiscInfoActivity.mDiscCursor = disc;
         return fragment;
     }
+
 
     public static Intent newIntent(Context context, Disc disc) {
         mDisc = disc;
@@ -162,7 +164,11 @@ public class DiscInfoFragment extends Fragment{
             mAdapter.notifyDataSetChanged();
         }
     }
+    */
+
+
 }
+
 
 
 

@@ -8,7 +8,11 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import com.github.loki.afro.metallum.entity.Band;
+import com.hitej.android.metalarchives.metallumobjects.search.bandname.BandName;
+import com.hitej.android.metalarchives.metallumobjects.search.bandname.SearchResult;
+
+//import com.github.loki.afro.metallum.entity.Band;
+
 
 
 /**
@@ -28,7 +32,7 @@ public class BandAboutFragment extends Fragment {
 
 
     private static String searchTypePlaceholder;
-    private Band mBandResult;
+    private SearchResult mBandResult;
 
 
 
@@ -36,7 +40,7 @@ public class BandAboutFragment extends Fragment {
         return new BandAboutFragment();
     }
 
-    public static BandAboutFragment newInstance(Band bandResult){
+    public static BandAboutFragment newInstance(SearchResult bandResult){
         BandAboutFragment fragment = newInstance();
 
         MASearchResultsActivity.mBandCursor = bandResult;
@@ -73,16 +77,16 @@ public class BandAboutFragment extends Fragment {
         bandNameText.setText(mBandResult.getName());
 
         TextView bandOriginText = (TextView)view.findViewById(R.id.band_about_origin_textview);
-        Log.i(TAG, "Setting bandOriginText to :" +  mBandResult.getLocation());
-        bandOriginText.setText(mBandResult.getLocation());
+        //Log.i(TAG, "Setting bandOriginText to :" +  mBandResult.getLocation());
+        //bandOriginText.setText(mBandResult.getLocation());
 
         TextView bandGenreText = (TextView)view.findViewById(R.id.band_about_genre_textview);
         Log.i(TAG, "Setting bandGenreText to :" +  mBandResult.getGenre());
         bandGenreText.setText(mBandResult.getGenre());
 
         TextView bandInfoText = (TextView)view.findViewById(R.id.band_about_info_textview);
-        Log.i(TAG, "Setting bandInfoText to :" +  mBandResult.getInfo());
-        bandInfoText.setText(mBandResult.getInfo());
+        //Log.i(TAG, "Setting bandInfoText to :" +  mBandResult.getInfo());
+        //bandInfoText.setText(mBandResult.getInfo());
 
 
 

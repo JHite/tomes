@@ -13,28 +13,28 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import com.github.loki.afro.metallum.entity.Disc;
+
 
 
 public class DiscInfoActivity extends SingleFragmentActivity {
 
     private static final String TAG = "MetalArchivesActivity";
     private Context mContext = this;
-    private static Disc mDisc;
+    //private static Disc mDisc;
 
     //holder for DiscInfoFragment
-    protected static Disc mDiscCursor;
+    //protected static Disc mDiscCursor;
 
 
 
-    public static Intent newIntent(Context context, Disc disc) {
-        mDisc = disc;
+    public static Intent newIntent(Context context) {
+        //mDisc = disc;
         return new Intent(context, DiscInfoActivity.class);
     }
 
     @Override
     protected Fragment createFragment() {
-        return new DiscInfoFragment().newInstance(mDisc);
+        return new DiscInfoFragment().newInstance();
     }
 
     @Override

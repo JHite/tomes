@@ -7,7 +7,7 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hitej.android.metalarchives.R;
-import com.hitej.android.metalarchives.metallumobjects.search.bandname.Band;
+import com.hitej.android.metalarchives.metallumobjects.search.bandname.BandName;
 import com.hitej.android.metalarchives.metallumobjects.search.bandname.SearchResult;
 
 import java.util.ArrayList;
@@ -18,10 +18,11 @@ import java.util.ArrayList;
 
 public class BandSearchResultsAdapter extends RecyclerView.Adapter<BandSearchResultsAdapter.ViewHolder> {
 
-    private ArrayList<SearchResult> mBandArrayList;
+    private ArrayList<SearchResult> mBandArrayList = new ArrayList<>();
 
     public BandSearchResultsAdapter(ArrayList<SearchResult> bandList) {
         mBandArrayList = bandList;
+
     }
 
     @Override

@@ -12,8 +12,6 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.github.loki.afro.metallum.entity.Band;
-import com.github.loki.afro.metallum.search.query.BandSearchQuery;
 import com.hitej.android.metalarchives.adapters.BandSearchResultsAdapter;
 import com.hitej.android.metalarchives.metallumobjects.search.bandname.SearchResult;
 import com.hitej.android.metalarchives.net.searchqueries.BandNameQuery;

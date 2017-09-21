@@ -16,7 +16,10 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-import com.github.loki.afro.metallum.entity.Band;
+
+
+import com.hitej.android.metalarchives.metallumobjects.search.bandname.BandName;
+import com.hitej.android.metalarchives.metallumobjects.search.bandname.SearchResult;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 import com.roughike.bottombar.OnTabClickListener;
@@ -27,7 +30,7 @@ public class BandInfoActivity extends SingleFragmentActivity {
     private static final String TAG = "BandInfoActivity";
     private BottomBar mBottomBar;
     private Context mContext = this;
-    protected static Band mBand; // reference to the band to display info about
+    protected static SearchResult mBand; // reference to the band to display info about
 
 
     /*      un-used
@@ -35,7 +38,7 @@ public class BandInfoActivity extends SingleFragmentActivity {
         return new Intent(context, BandInfoActivity.class);
     }*/
 
-    public static Intent newIntent(Context context, Band band) {
+    public static Intent newIntent(Context context, SearchResult band) {
         mBand = band;
         return new Intent(context, BandInfoActivity.class);
     }
@@ -72,6 +75,7 @@ public class BandInfoActivity extends SingleFragmentActivity {
                                     + BandAboutFragment.isInflated());
                         }
                         break;
+                        /*
                     case R.id.bottom_bar_band_discography:
 
                         if(BandDiscogFragment.isInflated())
@@ -87,7 +91,7 @@ public class BandInfoActivity extends SingleFragmentActivity {
 
 
 
-                        break;
+                        break; */
 
                     default:
 

@@ -6,7 +6,9 @@ import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 
-import com.github.loki.afro.metallum.entity.Band;
+
+import com.hitej.android.metalarchives.metallumobjects.search.bandname.BandName;
+import com.hitej.android.metalarchives.metallumobjects.search.bandname.SearchResult;
 
 /**
  * Created by jhite on 7/14/16
@@ -19,7 +21,7 @@ public class MASearchResultsActivity extends SingleFragmentActivity {
     private static final String TAG = "MASearchResultsActivity";
 
     //holder for BandSearchResult's Band
-    protected static Band mBandCursor;
+    protected static SearchResult mBandCursor;
 
     public static final String EXTRA_SEARCH_TYPE =
             "com.jhite.android.metalarchives.search_type";

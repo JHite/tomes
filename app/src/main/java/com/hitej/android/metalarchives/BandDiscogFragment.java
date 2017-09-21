@@ -12,15 +12,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.github.loki.afro.metallum.entity.Band;
-import com.github.loki.afro.metallum.entity.Disc;
 
 import java.io.Serializable;
 import java.util.List;
 
 /**
  * Created by jhite on 11/26/16.
- */
+
+    9/21 - Commenting out until ready to redo
 
 public class BandDiscogFragment  extends Fragment {
 
@@ -41,7 +40,7 @@ public class BandDiscogFragment  extends Fragment {
        /* args.putSerializable(ARGS_BAND, (Serializable) bandResult);
         Intent intent = new Intent();
         intent.putExtras(args);
-        */
+        // close this block
 
 
         return fragment;
@@ -74,7 +73,7 @@ public class BandDiscogFragment  extends Fragment {
             mDiscRecyclerView.setAdapter(new BandDiscogFragment.DiscAdapter(mDiscs));
         }
     }
-    */
+    //close this block
 
     private class DiscHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
@@ -172,3 +171,4 @@ public class BandDiscogFragment  extends Fragment {
         }
     }
 }
+*/

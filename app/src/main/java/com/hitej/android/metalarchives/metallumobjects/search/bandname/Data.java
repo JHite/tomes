@@ -4,14 +4,14 @@ import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
-public class Band {
+public class Data {
 
     @SerializedName("query")
     @Expose
     private String query;
     @SerializedName("search_results")
     @Expose
-    private List<SearchResultTest> searchResults = null;
+    private List<SearchResult> searchResults = null;
 
     public String getQuery() {
         return query;
@@ -21,11 +21,11 @@ public class Band {
         this.query = query;
     }
 
-    public List<SearchResultTest> getSearchResults() {
+    public List<SearchResult> getSearchResults() {
         return searchResults;
     }
 
-    public void setSearchResults(List<SearchResultTest> searchResults) {
+    public void setSearchResults(List<SearchResult> searchResults) {
         this.searchResults = searchResults;
     }
 

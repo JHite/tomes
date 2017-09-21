@@ -19,7 +19,7 @@ import retrofit2.http.Path;
 public interface MetalArchivesAPI {
 
     @GET("search/band_name/{keyword}")
-    Observable<List<com.hitej.android.metalarchives.metallumobjects.search.bandname.SearchResultTest>> searchBandName(@Path("keyword") String keyword);
+    Observable<com.hitej.android.metalarchives.metallumobjects.search.bandname.BandName> searchBandName(@Path("keyword") String keyword);
 
     @GET("albums/upcoming")
     Observable<List<UpcomingAlbum>> getUpcomingAlbums();

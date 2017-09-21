@@ -8,9 +8,10 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hitej.android.metalarchives.R;
 import com.hitej.android.metalarchives.adapters.BandSearchResultsAdapter;
-import com.hitej.android.metalarchives.metallumobjects.search.bandname.Band;
+
+import com.hitej.android.metalarchives.metallumobjects.search.bandname.BandName;
 import com.hitej.android.metalarchives.metallumobjects.search.bandname.SearchResult;
-import com.hitej.android.metalarchives.metallumobjects.search.bandname.SearchResultTest;
+
 import com.hitej.android.metalarchives.net.MetalArchivesAPI;
 
 import java.io.IOException;
@@ -21,6 +22,7 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.Disposable;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.HttpUrl;
 import okhttp3.Interceptor;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
@@ -72,12 +74,17 @@ public class BandNameQuery {
             @Override
             public okhttp3.Response intercept(Chain chain) throws IOException {
                 Request originalRequest = chain.request();
+                HttpUrl originalHttpUrl = originalRequest.url();
 
-                Request.Builder builder = originalRequest.newBuilder().header("Authorization",
-                        metalArchivesAPIKey);
+                HttpUrl url = originalHttpUrl.newBuilder()
+                        .addQueryParameter("api_key", metalArchivesAPIKey)
+                        .build();
 
-                Request newRequest = builder.build();
-                return chain.proceed(newRequest);
+                Request.Builder requestBuilder = originalRequest.newBuilder()
+                        .url(url);
+
+                Request request = requestBuilder.build();
+                return chain.proceed(request);
             }
         }).addInterceptor(httpLoggingInterceptor)
             .build();
@@ -91,12 +98,12 @@ public class BandNameQuery {
                 .build();
 
         MetalArchivesAPI api = retrofit.create(MetalArchivesAPI.class);
-
-        Observable<List<SearchResultTest>> band = api.searchBandName(queryText);
-        // 8/20 commenting out to test suscribing off of the observable
+        //TODO: 9/21 - Redo MetallumObjects ***
+        Observable<BandName> band = api.searchBandName(queryText);
+        // 8/20 commenting out to test subscribing off of the observable
         //Disposable disposable = band
         band
-                .subscribeOn(Schedulers.io())
+                .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::handleResponse,this::handleError);
                 /*.subscribeWith(new Disposable<SearchResult>() {
@@ -121,8 +128,21 @@ public class BandNameQuery {
                 });*/
 
     }
-    private void handleResponse(List<SearchResultTest> list){
-        mBandSearchResultsList = new ArrayList<Band>(list.getSearchResults());
+    /*private void handleResponse(List<BandName> bandResults){
+        //there should only be one band returned, with Data housing the actual results
+        //so check if list.size>1 then get results of first index
+        if (bandResults.size()>1) {Log.i(TAG, "result list size = " + mBandSearchResultsList.size());}
+        else{
+            mBandSearchResultsList = new ArrayList(bandResults.get(1).getData().getSearchResults());
+            Log.i(TAG, "result list size = " + mBandSearchResultsList.size());
+            mAdapter = new BandSearchResultsAdapter(mBandSearchResultsList);
+            mRecyclerView.setAdapter(mAdapter);
+        }
+
+    }*/
+
+    private void handleResponse(BandName bandResults){
+        mBandSearchResultsList = new ArrayList(bandResults.getData().getSearchResults());
         Log.i(TAG, "result list size = " + mBandSearchResultsList.size());
         mAdapter = new BandSearchResultsAdapter(mBandSearchResultsList);
         mRecyclerView.setAdapter(mAdapter);

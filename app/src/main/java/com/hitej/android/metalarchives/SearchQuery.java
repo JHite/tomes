@@ -4,7 +4,6 @@ import android.util.Log;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
-import com.hitej.android.metalarchives.metallumobjects.search.bandname.Band;
 import com.hitej.android.metalarchives.net.MetalArchivesAPI;
 
 import java.util.List;
