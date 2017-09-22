@@ -5,6 +5,7 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.util.Log;
+import android.view.View;
 
 /**
  * Created by jhite on 5/18/16.
@@ -64,11 +65,10 @@ public class MASearchActivity extends SingleFragmentActivity {
     //(7/3) The below will decide which fragment to show based upon search typed decided in
     // SearchQueryFragment's buttonSubmitQuery
 
-    public void showBandSearchResults( String queryTextString){
+    public void showBandSearchResults(String queryTextString, View view){
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container
                         , BandSearchResultsFragment.newInstance(queryTextString))
-                //TODO: pack query properly and use proper method
                 .commit();
     }
 }

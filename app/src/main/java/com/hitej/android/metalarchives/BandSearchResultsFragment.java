@@ -1,5 +1,6 @@
 package com.hitej.android.metalarchives;
 
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -42,6 +43,8 @@ public class BandSearchResultsFragment extends Fragment {
     public static final String ARG_QUERY_TEXT = "Query Text";
 
     private RecyclerView mResultsRecyclerView;
+    private RecyclerView.Adapter mAdapter;
+    private static View mView;
 
     private ArrayList<SearchResult> mBandResults = new ArrayList<>();
     private BandNameQuery mSearchQuery;
@@ -54,10 +57,9 @@ public class BandSearchResultsFragment extends Fragment {
 
     public static BandSearchResultsFragment newInstance(String queryText) {
         BandSearchResultsFragment fragment = newInstance();
-
         Bundle args = new Bundle();
 
-        args.putString(ARG_QUERY_TEXT, queryText );
+        args.putString(ARG_QUERY_TEXT, queryText);
         Log.i(TAG, queryText + " placed into bundle");
 
         fragment.setArguments(args);
@@ -69,7 +71,7 @@ public class BandSearchResultsFragment extends Fragment {
     //Be aware of any weird Fragment lifecycle stuff esp. with rotation
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
         searchType = getArguments().getString(ARG_SEARCH_TYPE);
@@ -79,14 +81,7 @@ public class BandSearchResultsFragment extends Fragment {
         mCompositeDisposable = new CompositeDisposable();
 
 
-        //add band search results to a list to display when fragment is inflated
-        mSearchQuery = new BandNameQuery(queryText);
-        mSearchQuery.start();
-
-        }
-
-
-
+    }
 
 
     @Override
@@ -99,6 +94,12 @@ public class BandSearchResultsFragment extends Fragment {
 
         mResultsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+        //add band search results to a list to display when fragment is inflated
+        //placing here instead of onCreate to test null RecyclerView
+        mSearchQuery = new BandNameQuery(queryText, getContext());
+        mSearchQuery.start();
+
+
         setupAdapter();
 
         return view;
@@ -106,7 +107,7 @@ public class BandSearchResultsFragment extends Fragment {
     }
 
     @Override
-    public void onDestroy(){
+    public void onDestroy() {
         super.onDestroy();
         mCompositeDisposable.clear();
     }
@@ -121,86 +122,18 @@ public class BandSearchResultsFragment extends Fragment {
         }
     }
 
+   /* public void updateUI() {
 
-    /*
-    private class BandHolder extends RecyclerView.ViewHolder
-            implements View.OnClickListener {
-
-        private Band mBand;
-
-        private ImageView mBandLogoImageView;
-        private TextView mBandNameText, mBandGenreText, mBandOriginText;
-
-
-        public BandHolder(View itemView) {
-            super(itemView);
-            itemView.setOnClickListener(this);
-
-
-            mBandNameText = (TextView)itemView.findViewById(R.id.search_results_band_name);
-            mBandGenreText = (TextView)itemView.findViewById(R.id.search_results_band_genre);
-            mBandOriginText = (TextView)itemView.findViewById(R.id.search_results_band_origin);
-
-        }
-
-        public void bindBand(Band band){
-            mBand = band;
-            mBandNameText.setText(mBand.getName().toString());
-            mBandGenreText.setText(mBand.getGenre().toString());
-            mBandOriginText.setText(mBand.getLocation());
-
-        }
-
-        @Override
-        public void onClick(View v) {
-            Log.i(TAG, mBand.toString() + "'s BandHolder clicked");
-            // an extra to show BandAboutFragment
-            Intent intent = BandInfoActivity.newIntent(getContext(), mBand);
-            startActivity(intent);
-
-
-        }
-    }
-
-
-    private class BandAdapter extends RecyclerView.Adapter<BandHolder> {
-
-        //private List<Band> mBandList;
-
-        public BandAdapter(List<Band> bandItems) {
-            mBandResults = bandItems;
+        if (mResultsRecyclerView == null) {
+            mAdapter = new (motdItems);
+            mNewsItemRecyclerView.setAdapter(mAdapter);
+        } else {
+            mAdapter.setMOTDItems(motdItems);
+            mAdapter.notifyDataSetChanged();
         }
 
 
-        @Override
-        public BandHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
-            LayoutInflater inflater = LayoutInflater.from(getActivity());
-            View view = inflater.inflate(R.layout.fragment_band_search_results_item, viewGroup, false);
-            return new BandHolder(view);
-        }
-
-        @Override
-        public void onBindViewHolder(BandHolder bandHolder, int position) {
-            Band bandResult = mBandResults.get(position);
-            bandHolder.bindBand(bandResult);
-
-        }
-
-        @Override
-        public int getItemCount() {
-            return mBandResults.size();
-        }
-
-    }
-
-
-
-    public static boolean isInflated() {
-        return isInflated;
-    }
-
-    public static void setIsInflated(boolean isInflated) {
-        BandSearchResultsFragment.isInflated = isInflated;
     }
     */
+
 }

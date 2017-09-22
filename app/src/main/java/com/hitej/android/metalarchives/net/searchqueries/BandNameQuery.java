@@ -1,11 +1,15 @@
 package com.hitej.android.metalarchives.net.searchqueries;
 
+import android.content.Context;
 import android.content.res.Resources;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
+import com.hitej.android.metalarchives.BandSearchResultsFragment;
+import com.hitej.android.metalarchives.MASearchActivity;
 import com.hitej.android.metalarchives.R;
 import com.hitej.android.metalarchives.adapters.BandSearchResultsAdapter;
 
@@ -46,11 +50,13 @@ public class BandNameQuery {
     private String queryText = "";
     private ArrayList mBandSearchResultsList;
     private BandSearchResultsAdapter mAdapter;
+    private Context mContext;
     private RecyclerView mRecyclerView;
     private final String metalArchivesAPIKey = "f60b07b8-612e-4a3b-95f5-1df3250a72ac";
 
-    public BandNameQuery(String bandName){
+    public BandNameQuery(String bandName, Context context){
         queryText = bandName;
+        mContext = context;
     }
 
     public void start() {
@@ -98,54 +104,25 @@ public class BandNameQuery {
                 .build();
 
         MetalArchivesAPI api = retrofit.create(MetalArchivesAPI.class);
-        //TODO: 9/21 - Redo MetallumObjects ***
         Observable<BandName> band = api.searchBandName(queryText);
-        // 8/20 commenting out to test subscribing off of the observable
-        //Disposable disposable = band
+
         band
                 .subscribeOn(Schedulers.newThread())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(this::handleResponse,this::handleError);
-                /*.subscribeWith(new Disposable<SearchResult>() {
-                    @Override
-                    public void onCompleted() {
-
-                    }
-
-                    @Override
-                    public void onError(Throwable e) {
-                        // cast to retrofit.HttpException to get the response code
-                        if (e instanceof HttpException) {
-                            HttpException response = (HttpException) e;
-                            int code = response.code();
-                            Log.i(TAG, "error - " + response.toString() + code);
-                        }
-                    }
-
-                    @Override
-                    public void onNext(SearchResult result) {
-                    }
-                });*/
 
     }
-    /*private void handleResponse(List<BandName> bandResults){
-        //there should only be one band returned, with Data housing the actual results
-        //so check if list.size>1 then get results of first index
-        if (bandResults.size()>1) {Log.i(TAG, "result list size = " + mBandSearchResultsList.size());}
-        else{
-            mBandSearchResultsList = new ArrayList(bandResults.get(1).getData().getSearchResults());
-            Log.i(TAG, "result list size = " + mBandSearchResultsList.size());
-            mAdapter = new BandSearchResultsAdapter(mBandSearchResultsList);
-            mRecyclerView.setAdapter(mAdapter);
-        }
 
-    }*/
 
     private void handleResponse(BandName bandResults){
         mBandSearchResultsList = new ArrayList(bandResults.getData().getSearchResults());
         Log.i(TAG, "result list size = " + mBandSearchResultsList.size());
+
         mAdapter = new BandSearchResultsAdapter(mBandSearchResultsList);
+        mRecyclerView = new RecyclerView(mContext);
+
         mRecyclerView.setAdapter(mAdapter);
+        mAdapter.notifyDataSetChanged();
 
 
     }

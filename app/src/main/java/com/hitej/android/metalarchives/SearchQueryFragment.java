@@ -110,7 +110,7 @@ public class SearchQueryFragment extends Fragment {
                     case BAND_QUERY:
                         //try{
                             ((MASearchActivity)getActivity())
-                                .showBandSearchResults(queryTextString);
+                                .showBandSearchResults(queryTextString,view);
                         Log.i(TAG, "fragment transaction made in onclick!");
                         break;
                        // }

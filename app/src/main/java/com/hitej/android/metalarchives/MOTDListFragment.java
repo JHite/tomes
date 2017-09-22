@@ -109,21 +109,7 @@ public class MOTDListFragment extends Fragment {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.fragment_motd_list, menu);
     }
-    /*      Unnecessary until settings menu required
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()) {
-            case R.id.menu_item_search:
-                Log.i(TAG, "Search button pressed");
 
-
-                return true;
-
-            default:
-                return super.onOptionsItemSelected(item);
-        }
-    }
-    */
     @Override
     public void onDestroy(){
         super.onDestroy();
