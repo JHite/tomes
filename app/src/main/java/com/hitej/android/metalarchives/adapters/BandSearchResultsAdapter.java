@@ -7,7 +7,6 @@ import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.hitej.android.metalarchives.R;
-import com.hitej.android.metalarchives.metallumobjects.search.bandname.BandName;
 import com.hitej.android.metalarchives.metallumobjects.search.bandname.SearchResult;
 
 import java.util.ArrayList;

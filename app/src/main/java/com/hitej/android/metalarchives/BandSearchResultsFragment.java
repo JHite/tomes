@@ -99,7 +99,7 @@ public class BandSearchResultsFragment extends Fragment {
         mSearchQuery = new BandNameQuery(queryText, getContext());
         mSearchQuery.start();
 
-
+        //updateUI();
         setupAdapter();
 
         return view;
@@ -116,24 +116,22 @@ public class BandSearchResultsFragment extends Fragment {
         return queryText;
     }
 
+
     private void setupAdapter() {
         if (isAdded()) {
             mResultsRecyclerView.setAdapter(new BandSearchResultsAdapter(mBandResults));
         }
     }
 
-   /* public void updateUI() {
-
+/*
+    public void updateUI() {
         if (mResultsRecyclerView == null) {
-            mAdapter = new (motdItems);
-            mNewsItemRecyclerView.setAdapter(mAdapter);
-        } else {
-            mAdapter.setMOTDItems(motdItems);
+            mAdapter = new BandSearchResultsAdapter(mBandResults);
+            mResultsRecyclerView.setAdapter(mAdapter);
             mAdapter.notifyDataSetChanged();
-        }
-
-
+        } else
+            mAdapter.notifyDataSetChanged();
     }
-    */
+*/
 
 }
