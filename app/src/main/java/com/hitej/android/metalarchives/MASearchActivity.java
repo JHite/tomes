@@ -65,7 +65,7 @@ public class MASearchActivity extends SingleFragmentActivity {
     //(7/3) The below will decide which fragment to show based upon search typed decided in
     // SearchQueryFragment's buttonSubmitQuery
 
-    public void showBandSearchResults(String queryTextString, View view){
+    public void showBandSearchResults(String queryTextString){
         getSupportFragmentManager().beginTransaction()
                 .replace(R.id.fragment_container
                         , BandSearchResultsFragment.newInstance(queryTextString))

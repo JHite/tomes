@@ -50,13 +50,14 @@ public class MASearchResultsActivity extends SingleFragmentActivity {
         }else {
             //put search type as bundle for SearchResults to distinguish search type
 
-            Log.i(TAG, "There is something weird going on in your createFragment()");
-           /* return new BandSearchResultsFragment()
+            //Log.i(TAG, "There is something weird going on in your createFragment()");
+           Log.i(TAG, "returning new BandSearchResultsFragment");
+             return new BandSearchResultsFragment()
                     .newInstance( "");
-                    */
+
         }
         //this will probably be really dangerous YOLO
-        return null;
+        //return null;
 
     }
 
@@ -81,4 +82,5 @@ public class MASearchResultsActivity extends SingleFragmentActivity {
                         , BandSearchResultsFragment.newInstance(queryTextString))
                 .commit();
     }
+
 }

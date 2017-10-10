@@ -1,6 +1,7 @@
 package com.hitej.android.metalarchives;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.text.TextUtils;
@@ -105,12 +106,14 @@ public class SearchQueryFragment extends Fragment {
                       searchTypePlaceholder = BAND_QUERY;
                     //TODO: finish radio button logic
                   } else {  Log.i(TAG, "fix this shit in onCLick");}
-
+                //TODO 10/10/17 - Create a new instance of MASResullts with query and search type
+                    //that will call showBandSearchResults, showArtist, etc
                 switch (searchTypePlaceholder) {
                     case BAND_QUERY:
                         //try{
-                            ((MASearchActivity)getActivity())
-                                .showBandSearchResults(queryTextString,view);
+                        Intent intent = MASearchResultsActivity.newIntent(getContext(), searchTypePlaceholder);
+                        startActivity(intent);
+                            //((MASearchResultsActivity)getActivity()).showBandSearchResults(queryTextString);
                         Log.i(TAG, "fragment transaction made in onclick!");
                         break;
                        // }

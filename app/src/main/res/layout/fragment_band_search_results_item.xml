@@ -1,7 +1,7 @@
 <android.support.v7.widget.CardView
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:cardview="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/motd_cardview"
+    android:id="@+id/fragment_band_search_results_item"
     android:layout_gravity="center"
     android:layout_width="match_parent"
     android:layout_height="200dp"
@@ -14,12 +14,7 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ImageView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/search_results_band_logo"
-            android:layout_gravity="center"
-            android:scaleType="centerCrop"/>
+
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
@@ -30,7 +25,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/search_results_band_genre"
-            android:text="@string/search_results_band_name"/>
+            android:text="@string/search_results_band_genre"/>
 
         <TextView
             android:layout_width="wrap_content"

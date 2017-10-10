@@ -13,10 +13,14 @@ import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
 
-import com.hitej.android.metalarchives.adapters.BandSearchResultsAdapter;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.hitej.android.metalarchives.metallumobjects.search.bandname.BandName;
 import com.hitej.android.metalarchives.metallumobjects.search.bandname.SearchResult;
-import com.hitej.android.metalarchives.net.searchqueries.BandNameQuery;
+import com.hitej.android.metalarchives.net.MetalArchivesAPI;
 
+
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -25,6 +29,14 @@ import io.reactivex.Observable;
 import io.reactivex.android.schedulers.AndroidSchedulers;
 import io.reactivex.disposables.CompositeDisposable;
 import io.reactivex.schedulers.Schedulers;
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 /**
@@ -47,6 +59,7 @@ public class BandSearchResultsFragment extends Fragment {
     private static View mView;
 
     private ArrayList<SearchResult> mBandResults = new ArrayList<>();
+    private SearchResult mSearchResult;
     private BandNameQuery mSearchQuery;
     private CompositeDisposable mCompositeDisposable;
 
@@ -66,10 +79,6 @@ public class BandSearchResultsFragment extends Fragment {
         return fragment;
     }
 
-
-    //When this fragment is created, it will perform the search from SearchQueryfragment
-    //Be aware of any weird Fragment lifecycle stuff esp. with rotation
-
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -83,25 +92,27 @@ public class BandSearchResultsFragment extends Fragment {
 
     }
 
-
     @Override
     public View onCreateView(LayoutInflater inflater,
                              ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_band_search_results, container, false);
+        setIsInflated(true);
+        Log.i(TAG, "FRAGMENT_BAND_SEARCH_RESULTS INFLATED");
 
         mResultsRecyclerView =
                 (RecyclerView) view.findViewById(R.id.band_search_results_recycler_view);
 
-        mResultsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
         //add band search results to a list to display when fragment is inflated
         //placing here instead of onCreate to test null RecyclerView
-        mSearchQuery = new BandNameQuery(queryText, getContext());
+        mSearchQuery = new BandNameQuery(queryText);
         mSearchQuery.start();
 
-        //updateUI();
-        setupAdapter();
+        mResultsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
+
+
+        setupAdapter();
+        updateUI();
         return view;
 
     }
@@ -109,6 +120,7 @@ public class BandSearchResultsFragment extends Fragment {
     @Override
     public void onDestroy() {
         super.onDestroy();
+        setIsInflated(false);
         mCompositeDisposable.clear();
     }
 
@@ -116,22 +128,167 @@ public class BandSearchResultsFragment extends Fragment {
         return queryText;
     }
 
-
     private void setupAdapter() {
         if (isAdded()) {
             mResultsRecyclerView.setAdapter(new BandSearchResultsAdapter(mBandResults));
         }
     }
 
-/*
     public void updateUI() {
-        if (mResultsRecyclerView == null) {
+        if(mAdapter == null){
             mAdapter = new BandSearchResultsAdapter(mBandResults);
             mResultsRecyclerView.setAdapter(mAdapter);
+        } else{
             mAdapter.notifyDataSetChanged();
-        } else
-            mAdapter.notifyDataSetChanged();
+        }
     }
-*/
 
+    public static Boolean getIsInflated() {
+        return isInflated;
+    }
+
+    public static void setIsInflated(Boolean isInflated) {
+        BandSearchResultsFragment.isInflated = isInflated;
+    }
+
+    private class ResultHolder extends RecyclerView.ViewHolder {
+    //TODO: 10/10/17 - implement onClick
+        private TextView mBandName, mBandGenre, mBandOrigin;
+
+        public ResultHolder(View view) {
+            super(view);
+
+            mBandName = (TextView) view.findViewById(R.id.search_results_band_name);
+            mBandGenre = (TextView) view.findViewById(R.id.search_results_band_genre);
+            mBandOrigin = (TextView) view.findViewById(R.id.search_results_band_origin);
+        }
+
+        public void bindResult(SearchResult searchResult){
+            mSearchResult = searchResult;
+            mBandName.setText(searchResult.getName());
+            mBandGenre.setText(searchResult.getGenre());
+            mBandOrigin.setText(searchResult.getCountry());
+        }
+    }
+
+    private class BandSearchResultsAdapter extends RecyclerView.Adapter<ResultHolder> {
+
+        private List<SearchResult> mBandArrayList ;
+
+        private BandSearchResultsAdapter(List<SearchResult> bandList) {
+            mBandArrayList = bandList;
+
+        }
+
+        @Override
+        public ResultHolder onCreateViewHolder(ViewGroup parent, int viewType) {
+            LayoutInflater layoutInflater = LayoutInflater.from(getActivity());
+            View view = layoutInflater
+                    .inflate(R.layout.fragment_band_search_results_item, parent, false);
+            return new ResultHolder(view);
+        }
+
+        @Override
+        public void onBindViewHolder(ResultHolder holder, int position) {
+            SearchResult sr = mBandArrayList.get(position);
+            holder.bindResult(sr);
+            Log.i(TAG, "View binded!");
+        }
+
+        @Override
+        public int getItemCount() {
+            return mBandArrayList.size();
+        }
+
+
+    }
+
+    private class BandNameQuery {
+
+        static final String BASE_URL = "http://em.wemakesites.net/";
+        public static final String TAG = "BandNameQuery";
+        private String queryText = "";
+        private ArrayList mBandSearchResultsList;
+        private BandSearchResultsAdapter mAdapter;
+
+        private RecyclerView mRecyclerView;
+        private final String metalArchivesAPIKey = "f60b07b8-612e-4a3b-95f5-1df3250a72ac";
+
+        private BandNameQuery(String bandName){
+            queryText = bandName;
+        }
+
+        private void start() {
+            //Log.i(TAG, Resources.getSystem().getString(R.string.metalArchivesAPIKey));
+            Gson gson = new GsonBuilder()
+                    .setLenient()
+                    .create();
+
+            RxJava2CallAdapterFactory rxAdapter
+                    = RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io());
+
+            HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+
+            // Can be Level.BASIC, Level.HEADERS, or Level.BODY
+            // See http://square.github.io/okhttp/3.x/logging-interceptor/ to see the options.
+            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            //TODO: add log to okhttpclient
+            //intercepter code
+            OkHttpClient okHttpClient = new OkHttpClient().newBuilder().addInterceptor(new Interceptor() {
+                @Override
+                public okhttp3.Response intercept(Chain chain) throws IOException {
+                    Request originalRequest = chain.request();
+                    HttpUrl originalHttpUrl = originalRequest.url();
+
+                    HttpUrl url = originalHttpUrl.newBuilder()
+                            .addQueryParameter("api_key", metalArchivesAPIKey)
+                            .build();
+
+                    Request.Builder requestBuilder = originalRequest.newBuilder()
+                            .url(url);
+
+                    Request request = requestBuilder.build();
+                    return chain.proceed(request);
+                }
+            }).addInterceptor(httpLoggingInterceptor)
+                    .build();
+
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .client(okHttpClient)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addCallAdapterFactory(rxAdapter)
+                    .build();
+
+            MetalArchivesAPI api = retrofit.create(MetalArchivesAPI.class);
+            Observable<BandName> band = api.searchBandName(queryText);
+
+            band
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this::handleResponse,this::handleError);
+
+        }
+
+
+        private void handleResponse(BandName bandResults){
+            mBandSearchResultsList = new ArrayList(bandResults.getData().getSearchResults());
+            Log.i(TAG, "result list size = " + mBandSearchResultsList.size());
+
+            mAdapter = new BandSearchResultsAdapter(mBandSearchResultsList);
+            mRecyclerView = new RecyclerView(getContext());
+
+            mRecyclerView.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+
+
+        }
+
+        private void handleError(Throwable e){
+            Log.i (TAG, "ERROR = " + e.toString());
+        }
+    }
 }
+
