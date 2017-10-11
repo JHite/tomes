@@ -5,10 +5,6 @@ package com.hitej.android.metalarchives;
     6/3/16
     Hosts initial view fragments and launches MASearchActivity upon searching
 
-    NOTE: As of 5/31, MASearchResultActivity is deprecated
-    Use MASearchActivity to host all related fragments and
-    implement backstack accordingly to allow continuous searching
-    (i.e search -> back -> search -> back )
  */
 
 import android.content.Context;

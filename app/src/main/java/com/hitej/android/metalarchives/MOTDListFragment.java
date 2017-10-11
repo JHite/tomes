@@ -47,6 +47,10 @@ public class MOTDListFragment extends Fragment {
         void onMOTDSelected(MOTDItem motdItem);
     }
 
+    public static MOTDListFragment newInstance(){
+        return new MOTDListFragment();
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -117,9 +121,7 @@ public class MOTDListFragment extends Fragment {
     }
 
 
-    public static MOTDListFragment newInstance(){
-        return new MOTDListFragment();
-    }
+
 
 
     private class MOTDHolder extends RecyclerView.ViewHolder

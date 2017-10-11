@@ -55,14 +55,18 @@ public class BandSearchResultsFragment extends Fragment {
     public static final String ARG_QUERY_TEXT = "Query Text";
 
     private RecyclerView mResultsRecyclerView;
-    private RecyclerView.Adapter mAdapter;
+    private BandSearchResultsAdapter mAdapter;
     private static View mView;
+    private Callbacks mCallbacks;
 
     private ArrayList<SearchResult> mBandResults = new ArrayList<>();
     private SearchResult mSearchResult;
     private BandNameQuery mSearchQuery;
     private CompositeDisposable mCompositeDisposable;
 
+    public interface Callbacks{
+        void onResultSelected(SearchResult sr);
+    }
 
     public static BandSearchResultsFragment newInstance() {
         return new BandSearchResultsFragment();
@@ -101,13 +105,13 @@ public class BandSearchResultsFragment extends Fragment {
 
         mResultsRecyclerView =
                 (RecyclerView) view.findViewById(R.id.band_search_results_recycler_view);
-
+        mResultsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         //add band search results to a list to display when fragment is inflated
         //placing here instead of onCreate to test null RecyclerView
         mSearchQuery = new BandNameQuery(queryText);
         mSearchQuery.start();
 
-        mResultsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
 
 
 
@@ -134,14 +138,7 @@ public class BandSearchResultsFragment extends Fragment {
         }
     }
 
-    public void updateUI() {
-        if(mAdapter == null){
-            mAdapter = new BandSearchResultsAdapter(mBandResults);
-            mResultsRecyclerView.setAdapter(mAdapter);
-        } else{
-            mAdapter.notifyDataSetChanged();
-        }
-    }
+
 
     public static Boolean getIsInflated() {
         return isInflated;
@@ -173,10 +170,10 @@ public class BandSearchResultsFragment extends Fragment {
 
     private class BandSearchResultsAdapter extends RecyclerView.Adapter<ResultHolder> {
 
-        private List<SearchResult> mBandArrayList ;
+        private List<SearchResult> mBandResultList ;
 
         private BandSearchResultsAdapter(List<SearchResult> bandList) {
-            mBandArrayList = bandList;
+            mBandResultList = bandList;
 
         }
 
@@ -190,17 +187,27 @@ public class BandSearchResultsFragment extends Fragment {
 
         @Override
         public void onBindViewHolder(ResultHolder holder, int position) {
-            SearchResult sr = mBandArrayList.get(position);
+            SearchResult sr = mBandResultList.get(position);
             holder.bindResult(sr);
             Log.i(TAG, "View binded!");
         }
 
         @Override
         public int getItemCount() {
-            return mBandArrayList.size();
+            return mBandResultList.size();
         }
 
 
+    }
+
+    public void updateUI() {
+        if(mAdapter == null){
+            Log.i(TAG, "UpdateUI is launching new bandresultAdapter");
+            mAdapter = new BandSearchResultsAdapter(mBandResults);
+            mResultsRecyclerView.setAdapter(mAdapter);
+        } else{
+            mAdapter.notifyDataSetChanged();
+        }
     }
 
     private class BandNameQuery {
@@ -211,7 +218,6 @@ public class BandSearchResultsFragment extends Fragment {
         private ArrayList mBandSearchResultsList;
         private BandSearchResultsAdapter mAdapter;
 
-        private RecyclerView mRecyclerView;
         private final String metalArchivesAPIKey = "f60b07b8-612e-4a3b-95f5-1df3250a72ac";
 
         private BandNameQuery(String bandName){
@@ -278,9 +284,9 @@ public class BandSearchResultsFragment extends Fragment {
             Log.i(TAG, "result list size = " + mBandSearchResultsList.size());
 
             mAdapter = new BandSearchResultsAdapter(mBandSearchResultsList);
-            mRecyclerView = new RecyclerView(getContext());
 
-            mRecyclerView.setAdapter(mAdapter);
+
+            mResultsRecyclerView.setAdapter(mAdapter);
             mAdapter.notifyDataSetChanged();
 
 

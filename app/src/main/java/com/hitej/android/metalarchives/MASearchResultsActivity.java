@@ -28,11 +28,18 @@ public class MASearchResultsActivity extends SingleFragmentActivity {
 
     public static final String EXTRA_RESULTS_SHOW =
             "com.jhite.android.metalarchives.results_show";
-    public static final String ARG_SEARCH_TYPE = "Search Type";
 
-    public static Intent newIntent(Context context, String searchType) {
+    public static final String EXTRA_QUERY_TEXT =
+            "com.jhite.android.metalarchives.query_text";
+
+    public static Intent newIntent(Context context, String searchType, String queryText) {
         Intent intent = new Intent(context, MASearchResultsActivity.class);
         intent.putExtra(EXTRA_SEARCH_TYPE, searchType);
+        intent.putExtra(EXTRA_QUERY_TEXT, queryText);
+        intent.putExtra(EXTRA_RESULTS_SHOW, true);
+        Log.i(TAG, "Search Type = " + intent.getStringExtra(EXTRA_SEARCH_TYPE) +
+                "\n     Query Text = " + intent.getStringExtra(EXTRA_QUERY_TEXT) +
+                "\n     ResultsShow = " + intent.getBooleanExtra(EXTRA_RESULTS_SHOW, false));
         return intent;
     }
 
@@ -45,26 +52,20 @@ public class MASearchResultsActivity extends SingleFragmentActivity {
         //check extras for results and show proper fragment
         //if intent has results show flagged false, show search
         if(!getIntent().getBooleanExtra(EXTRA_RESULTS_SHOW, false)) {
-            Log.i(TAG, "fragment created - results show = false");
+            Log.i(TAG, "fragment created - results show = " + EXTRA_RESULTS_SHOW );
             return new SearchQueryFragment().newInstance();
         }else {
-            //put search type as bundle for SearchResults to distinguish search type
-
-            //Log.i(TAG, "There is something weird going on in your createFragment()");
-           Log.i(TAG, "returning new BandSearchResultsFragment");
-             return new BandSearchResultsFragment()
-                    .newInstance( "");
-
-        }
-        //this will probably be really dangerous YOLO
-        //return null;
-
+            //If EXTRA = BANDSEARCH, SHOW BANDRESULTSFRAGMENT WITH QUERYTEXT
+           Log.i(TAG, "returning new BandSearchResultsFragment" +  "extra query text = "
+                   + getIntent().getStringExtra(EXTRA_QUERY_TEXT));
+           return new BandSearchResultsFragment()
+                    .newInstance( getIntent().getStringExtra(EXTRA_QUERY_TEXT));
+            }
     }
 
     @Override
-    public void onCreate(Bundle savedInstanceState){
+    public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
     }
 
 

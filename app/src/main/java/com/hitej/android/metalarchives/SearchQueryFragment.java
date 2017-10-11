@@ -111,10 +111,10 @@ public class SearchQueryFragment extends Fragment {
                 switch (searchTypePlaceholder) {
                     case BAND_QUERY:
                         //try{
-                        Intent intent = MASearchResultsActivity.newIntent(getContext(), searchTypePlaceholder);
+                        Intent intent = MASearchResultsActivity.newIntent(getContext(), searchTypePlaceholder, queryTextString);
                         startActivity(intent);
                             //((MASearchResultsActivity)getActivity()).showBandSearchResults(queryTextString);
-                        Log.i(TAG, "fragment transaction made in onclick!");
+                        Log.i(TAG, "fragment transaction made in onclick! QueryText= " + queryTextString);
                         break;
                        // }
                         //catch (NullPointerException exception){
