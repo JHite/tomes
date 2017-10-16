@@ -148,12 +148,14 @@ public class BandSearchResultsFragment extends Fragment {
         BandSearchResultsFragment.isInflated = isInflated;
     }
 
-    private class ResultHolder extends RecyclerView.ViewHolder {
-    //TODO: 10/10/17 - implement onClick
+    private class ResultHolder extends RecyclerView.ViewHolder
+        implements View.OnClickListener{
+
         private TextView mBandName, mBandGenre, mBandOrigin;
 
         public ResultHolder(View view) {
             super(view);
+            view.setOnClickListener(this);
 
             mBandName = (TextView) view.findViewById(R.id.search_results_band_name);
             mBandGenre = (TextView) view.findViewById(R.id.search_results_band_genre);
@@ -162,14 +164,23 @@ public class BandSearchResultsFragment extends Fragment {
 
         public void bindResult(SearchResult searchResult){
             mSearchResult = searchResult;
+            Log.i(TAG, mSearchResult.getName() + "\n" + mSearchResult.getId() + "being bound to view");
             mBandName.setText(searchResult.getName());
             mBandGenre.setText(searchResult.getGenre());
             mBandOrigin.setText(searchResult.getCountry());
         }
+
+        @Override
+        public void onClick(View v){
+            Log.i(TAG,  mSearchResult.getName() + "'s ResultHolder clicked!");
+            //pass the band's id to BandInfoActivity in order
+            Intent intent = BandInfoActivity.newIntent(getContext(),mSearchResult);
+            startActivity(intent);
+        }
     }
 
     private class BandSearchResultsAdapter extends RecyclerView.Adapter<ResultHolder> {
-
+        //TODO: 10-16-17: fix bug where onClick will load wrong band
         private List<SearchResult> mBandResultList ;
 
         private BandSearchResultsAdapter(List<SearchResult> bandList) {
@@ -189,7 +200,7 @@ public class BandSearchResultsFragment extends Fragment {
         public void onBindViewHolder(ResultHolder holder, int position) {
             SearchResult sr = mBandResultList.get(position);
             holder.bindResult(sr);
-            Log.i(TAG, "View binded!");
+            Log.i(TAG, "View binded! Array Position: " + position);
         }
 
         @Override

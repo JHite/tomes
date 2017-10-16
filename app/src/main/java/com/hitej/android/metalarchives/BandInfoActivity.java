@@ -24,6 +24,8 @@ import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 import com.roughike.bottombar.OnTabClickListener;
 
+import java.util.List;
+
 
 public class BandInfoActivity extends SingleFragmentActivity {
 
@@ -32,27 +34,23 @@ public class BandInfoActivity extends SingleFragmentActivity {
     private Context mContext = this;
     protected static SearchResult mBand; // reference to the band to display info about
 
-
-    /*      un-used
-    public static Intent newIntent(Context context) {
-        return new Intent(context, BandInfoActivity.class);
-    }*/
-
     public static Intent newIntent(Context context, SearchResult band) {
         mBand = band;
         return new Intent(context, BandInfoActivity.class);
     }
 
     @Override
-    //TODO: create fragment to replace
     protected Fragment createFragment() {
-        return new MOTDListFragment().newInstance();
+        return new BandAboutFragment().newInstance(mBand);
     }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        //Launch Observables that will gather discog, band member info, etc
+
 
         //Attach Bottom bar to this Activity and populate its contents
         //while creating its onClickListeners
@@ -152,6 +150,97 @@ public class BandInfoActivity extends SingleFragmentActivity {
 
         mBottomBar.onSaveInstanceState(outState);
     }
+
+    /*Query's "/band/id" endpoint
+        Information such as band details, discog, current lineup obtained here
+     */
+    private class BandInfoQuery {
+
+        static final String BASE_URL = "http://em.wemakesites.net/";
+        public static final String TAG = "BandInfoQuery";
+        private String queryText = "";
+        private List mResultsList;
+       
+
+        private final String metalArchivesAPIKey = "f60b07b8-612e-4a3b-95f5-1df3250a72ac";
+
+        private BandInfoQuery(String bandID){
+            queryText = bandName;
+        }
+
+        private void start() {
+            //Log.i(TAG, Resources.getSystem().getString(R.string.metalArchivesAPIKey));
+            Gson gson = new GsonBuilder()
+                    .setLenient()
+                    .create();
+
+            RxJava2CallAdapterFactory rxAdapter
+                    = RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io());
+
+            HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
+
+            // Can be Level.BASIC, Level.HEADERS, or Level.BODY
+            // See http://square.github.io/okhttp/3.x/logging-interceptor/ to see the options.
+            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
+
+            //TODO: add log to okhttpclient
+            //intercepter code
+            OkHttpClient okHttpClient = new OkHttpClient().newBuilder().addInterceptor(new Interceptor() {
+                @Override
+                public okhttp3.Response intercept(Chain chain) throws IOException {
+                    Request originalRequest = chain.request();
+                    HttpUrl originalHttpUrl = originalRequest.url();
+
+                    HttpUrl url = originalHttpUrl.newBuilder()
+                            .addQueryParameter("api_key", metalArchivesAPIKey)
+                            .build();
+
+                    Request.Builder requestBuilder = originalRequest.newBuilder()
+                            .url(url);
+
+                    Request request = requestBuilder.build();
+                    return chain.proceed(request);
+                }
+            }).addInterceptor(httpLoggingInterceptor)
+                    .build();
+
+
+            Retrofit retrofit = new Retrofit.Builder()
+                    .baseUrl(BASE_URL)
+                    .client(okHttpClient)
+                    .addConverterFactory(GsonConverterFactory.create(gson))
+                    .addCallAdapterFactory(rxAdapter)
+                    .build();
+
+            MetalArchivesAPI api = retrofit.create(MetalArchivesAPI.class);
+            Observable<BandName> band = api.searchBandName(queryText);
+
+            band
+                    .subscribeOn(Schedulers.newThread())
+                    .observeOn(AndroidSchedulers.mainThread())
+                    .subscribe(this::handleResponse,this::handleError);
+
+        }
+
+
+        private void handleResponse(BandName bandResults){
+            mBandSearchResultsList = new ArrayList(bandResults.getData().getSearchResults());
+            Log.i(TAG, "result list size = " + mBandSearchResultsList.size());
+
+            mAdapter = new BandSearchResultsAdapter(mBandSearchResultsList);
+
+
+            mResultsRecyclerView.setAdapter(mAdapter);
+            mAdapter.notifyDataSetChanged();
+
+
+        }
+
+        private void handleError(Throwable e){
+            Log.i (TAG, "ERROR = " + e.toString());
+        }
+    }
+
 
 
 
