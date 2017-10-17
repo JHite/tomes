@@ -58,6 +58,7 @@ public class BandSearchResultsFragment extends Fragment {
     private BandSearchResultsAdapter mAdapter;
     private static View mView;
     private Callbacks mCallbacks;
+    private static String mSearchResultID;
 
     private ArrayList<SearchResult> mBandResults = new ArrayList<>();
     private SearchResult mSearchResult;
@@ -153,6 +154,7 @@ public class BandSearchResultsFragment extends Fragment {
 
         private TextView mBandName, mBandGenre, mBandOrigin;
 
+
         public ResultHolder(View view) {
             super(view);
             view.setOnClickListener(this);
@@ -172,9 +174,12 @@ public class BandSearchResultsFragment extends Fragment {
 
         @Override
         public void onClick(View v){
-            Log.i(TAG,  mSearchResult.getName() + "'s ResultHolder clicked!");
+            mSearchResultID = mSearchResult.getId();
+            Log.i(TAG,  mSearchResult.getName() + "'s ResultHolder clicked!"
+                    + mSearchResultID + " = ID");
+
             //pass the band's id to BandInfoActivity in order
-            Intent intent = BandInfoActivity.newIntent(getContext(),mSearchResult);
+            Intent intent = BandInfoActivity.newIntent(getContext(), mSearchResultID);
             startActivity(intent);
         }
     }

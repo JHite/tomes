@@ -17,14 +17,33 @@ import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
 
-
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.hitej.android.metalarchives.metallumobjects.band.bandid.Band;
+import com.hitej.android.metalarchives.metallumobjects.band.bandid.CurrentLineup;
+import com.hitej.android.metalarchives.metallumobjects.band.bandid.Details;
+import com.hitej.android.metalarchives.metallumobjects.band.bandid.Discography;
 import com.hitej.android.metalarchives.metallumobjects.search.bandname.BandName;
 import com.hitej.android.metalarchives.metallumobjects.search.bandname.SearchResult;
+import com.hitej.android.metalarchives.net.MetalArchivesAPI;
 import com.roughike.bottombar.BottomBar;
 import com.roughike.bottombar.OnMenuTabClickListener;
 import com.roughike.bottombar.OnTabClickListener;
 
+import java.io.IOException;
 import java.util.List;
+
+import io.reactivex.Observable;
+import io.reactivex.android.schedulers.AndroidSchedulers;
+import io.reactivex.schedulers.Schedulers;
+import okhttp3.HttpUrl;
+import okhttp3.Interceptor;
+import okhttp3.OkHttpClient;
+import okhttp3.Request;
+import okhttp3.logging.HttpLoggingInterceptor;
+import retrofit2.Retrofit;
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory;
+import retrofit2.converter.gson.GsonConverterFactory;
 
 
 public class BandInfoActivity extends SingleFragmentActivity {
@@ -32,22 +51,27 @@ public class BandInfoActivity extends SingleFragmentActivity {
     private static final String TAG = "BandInfoActivity";
     private BottomBar mBottomBar;
     private Context mContext = this;
-    protected static SearchResult mBand; // reference to the band to display info about
+    protected static String mBandID; // reference to the band to display info about
+    public static final String EXTRA_QUERY_ID = "com.jhite.android.metalarchives.bandinfo.queryid";
 
-    public static Intent newIntent(Context context, SearchResult band) {
-        mBand = band;
-        return new Intent(context, BandInfoActivity.class);
+    public static Intent newIntent(Context context, String stringID) {
+        Intent intent = new Intent(context, BandInfoActivity.class);
+        intent.putExtra(EXTRA_QUERY_ID, stringID);
+        return intent;
     }
 
     @Override
     protected Fragment createFragment() {
-        return new BandAboutFragment().newInstance(mBand);
+        return new BandAboutFragment().newInstance(getIntent().getStringExtra(EXTRA_QUERY_ID));
     }
 
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mBandID = getIntent().getStringExtra(EXTRA_QUERY_ID);
+
 
         //Launch Observables that will gather discog, band member info, etc
 
@@ -151,95 +175,7 @@ public class BandInfoActivity extends SingleFragmentActivity {
         mBottomBar.onSaveInstanceState(outState);
     }
 
-    /*Query's "/band/id" endpoint
-        Information such as band details, discog, current lineup obtained here
-     */
-    private class BandInfoQuery {
 
-        static final String BASE_URL = "http://em.wemakesites.net/";
-        public static final String TAG = "BandInfoQuery";
-        private String queryText = "";
-        private List mResultsList;
-       
-
-        private final String metalArchivesAPIKey = "f60b07b8-612e-4a3b-95f5-1df3250a72ac";
-
-        private BandInfoQuery(String bandID){
-            queryText = bandName;
-        }
-
-        private void start() {
-            //Log.i(TAG, Resources.getSystem().getString(R.string.metalArchivesAPIKey));
-            Gson gson = new GsonBuilder()
-                    .setLenient()
-                    .create();
-
-            RxJava2CallAdapterFactory rxAdapter
-                    = RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io());
-
-            HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
-
-            // Can be Level.BASIC, Level.HEADERS, or Level.BODY
-            // See http://square.github.io/okhttp/3.x/logging-interceptor/ to see the options.
-            httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
-
-            //TODO: add log to okhttpclient
-            //intercepter code
-            OkHttpClient okHttpClient = new OkHttpClient().newBuilder().addInterceptor(new Interceptor() {
-                @Override
-                public okhttp3.Response intercept(Chain chain) throws IOException {
-                    Request originalRequest = chain.request();
-                    HttpUrl originalHttpUrl = originalRequest.url();
-
-                    HttpUrl url = originalHttpUrl.newBuilder()
-                            .addQueryParameter("api_key", metalArchivesAPIKey)
-                            .build();
-
-                    Request.Builder requestBuilder = originalRequest.newBuilder()
-                            .url(url);
-
-                    Request request = requestBuilder.build();
-                    return chain.proceed(request);
-                }
-            }).addInterceptor(httpLoggingInterceptor)
-                    .build();
-
-
-            Retrofit retrofit = new Retrofit.Builder()
-                    .baseUrl(BASE_URL)
-                    .client(okHttpClient)
-                    .addConverterFactory(GsonConverterFactory.create(gson))
-                    .addCallAdapterFactory(rxAdapter)
-                    .build();
-
-            MetalArchivesAPI api = retrofit.create(MetalArchivesAPI.class);
-            Observable<BandName> band = api.searchBandName(queryText);
-
-            band
-                    .subscribeOn(Schedulers.newThread())
-                    .observeOn(AndroidSchedulers.mainThread())
-                    .subscribe(this::handleResponse,this::handleError);
-
-        }
-
-
-        private void handleResponse(BandName bandResults){
-            mBandSearchResultsList = new ArrayList(bandResults.getData().getSearchResults());
-            Log.i(TAG, "result list size = " + mBandSearchResultsList.size());
-
-            mAdapter = new BandSearchResultsAdapter(mBandSearchResultsList);
-
-
-            mResultsRecyclerView.setAdapter(mAdapter);
-            mAdapter.notifyDataSetChanged();
-
-
-        }
-
-        private void handleError(Throwable e){
-            Log.i (TAG, "ERROR = " + e.toString());
-        }
-    }
 
 
 
