@@ -195,10 +195,13 @@ public class BandAboutFragment extends Fragment {
         private void handleResponse(Band bandResults){
             Log.i(TAG, "Handling response...");
             mBand = bandResults;
+            BandInfoActivity.mBand = bandResults;
+
             Log.i(TAG, "About Page for Band id" + mBand.getData().getId() +
                 "loading");
             TextView bandInfoText = (TextView)getView().findViewById(R.id.band_about_info_textview);
             bandInfoText.setText(mBand.getData().getBio());
+
 
             /*
             mBandDetails = bandResults.getDetails();

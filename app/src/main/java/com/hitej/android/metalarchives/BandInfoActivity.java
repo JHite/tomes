@@ -53,6 +53,7 @@ public class BandInfoActivity extends SingleFragmentActivity {
     private Context mContext = this;
     protected static String mBandID; // reference to the band to display info about
     public static final String EXTRA_QUERY_ID = "com.jhite.android.metalarchives.bandinfo.queryid";
+    protected static Band mBand;
 
     public static Intent newIntent(Context context, String stringID) {
         Intent intent = new Intent(context, BandInfoActivity.class);

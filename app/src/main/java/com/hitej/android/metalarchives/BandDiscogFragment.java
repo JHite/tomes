@@ -13,6 +13,8 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 
+import com.hitej.android.metalarchives.metallumobjects.band.bandid.Discography;
+
 import java.io.Serializable;
 import java.util.List;
 
@@ -69,7 +71,7 @@ public class BandDiscogFragment  extends Fragment {
     private class DiscHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
-        private Disc mDisc;
+        private Discography mDisc;
 
         private ImageView mBandLogoImageView;
         private TextView mDiscNameText, mDiscRelease, mBandOriginText;
@@ -85,18 +87,18 @@ public class BandDiscogFragment  extends Fragment {
 
         }
 
-        public void bindDisc(Disc disc) {
+        public void bindDisc(Discography disc) {
             mDisc = disc;
-            mDiscNameText.setText(mDisc.getName());
-            mDiscRelease.setText(mDisc.getReleaseDate());
+            mDiscNameText.setText(mDisc.getTitle());
+            mDiscRelease.setText(mDisc.getYear());
         }
 
         @Override
         public void onClick(View v) {
             //TODO:7-4-14: Launch DiscInfoActivity with mDisc
-            Log.i(TAG, mDisc.getName() + "'s Disc clicked");
-            Intent intent = DiscInfoActivity.newIntent(getContext(), mDisc);
-            startActivity(intent);
+            Log.i(TAG, mDisc.getTitle() + "'s Disc clicked");
+            //Intent intent = DiscInfoActivity.newIntent(getContext(), mDisc);
+            //startActivity(intent);
 
 
         }
@@ -105,9 +107,10 @@ public class BandDiscogFragment  extends Fragment {
 
     private class DiscAdapter extends RecyclerView.Adapter<BandDiscogFragment.DiscHolder> {
 
+        private List<Discography> mDiscList;
 
-        public DiscAdapter(List<Disc> discsItems) {
-            mDiscs = discsItems;
+        public DiscAdapter(List<Discography> discsItems) {
+            mDiscList = discsItems;
         }
 
 
@@ -120,14 +123,14 @@ public class BandDiscogFragment  extends Fragment {
 
         @Override
         public void onBindViewHolder(BandDiscogFragment.DiscHolder discHolder, int position) {
-            Disc disc = mDiscs.get(position);
+            Discography disc = mDiscList.get(position);
             discHolder.bindDisc(disc);
 
         }
 
         @Override
         public int getItemCount() {
-            return mDiscs.size();
+            return mDiscList.size();
         }
 
     }
@@ -154,7 +157,7 @@ public class BandDiscogFragment  extends Fragment {
 
     public void updateUI(){
         if(mAdapter == null){
-            mAdapter = new DiscAdapter(mDiscs);
+            mAdapter = new DiscAdapter(mDisc);
             mDiscRecyclerView.setAdapter(mAdapter);
         } else{
             //may need more here
