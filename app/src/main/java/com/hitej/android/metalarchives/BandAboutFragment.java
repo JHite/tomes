@@ -20,6 +20,7 @@ import com.hitej.android.metalarchives.metallumobjects.search.bandname.SearchRes
 import com.hitej.android.metalarchives.net.MetalArchivesAPI;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -55,9 +56,9 @@ public class BandAboutFragment extends Fragment {
 
     private SearchResult mBandResult;
     private Details mBandDetails;
-    private List<Discography> mBandDiscography;
+    private ArrayList<Discography> mBandDiscography;
     private List<CurrentLineup> mCurrentLineup;
-    private static String mBandID;
+    private static String mBandID = "";
     private BandInfoQuery query;
 
 
@@ -130,6 +131,7 @@ public class BandAboutFragment extends Fragment {
         public static final String TAG = "BandInfoQuery";
         private String queryText = "";
         private final String metalArchivesAPIKey = "f60b07b8-612e-4a3b-95f5-1df3250a72ac";
+        private Band mBand;
 
         private BandInfoQuery(String bandID){
             queryText = bandID;
@@ -191,15 +193,22 @@ public class BandAboutFragment extends Fragment {
 
 
         private void handleResponse(Band bandResults){
-            mBandDetails = bandResults.getDetails();
-            mBandDiscography = bandResults.getDiscography();
-            List<CurrentLineup> mCurrentLineup = bandResults.getCurrentLineup();
-            Log.i(TAG, "Discography result list size = " + mBandDiscography.size());
-
+            Log.i(TAG, "Handling response...");
+            mBand = bandResults;
+            Log.i(TAG, "About Page for Band id" + mBand.getData().getId() +
+                "loading");
             TextView bandInfoText = (TextView)getView().findViewById(R.id.band_about_info_textview);
-            bandInfoText.setText(mBandDetails.toString());
+            bandInfoText.setText(mBand.getData().getBio());
+
+            /*
+            mBandDetails = bandResults.getDetails();
+            mBandDiscography = new ArrayList<>(bandResults.getDiscography());
+            List<CurrentLineup> mCurrentLineup = bandResults.getCurrentLineup();
+            Log.i(TAG, mBand.getBandName() + "'s Bio  = " + mBand.getBio());
 
 
+
+            */
 
 
         }

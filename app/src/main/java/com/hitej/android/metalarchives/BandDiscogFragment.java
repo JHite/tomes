@@ -18,30 +18,22 @@ import java.util.List;
 
 /**
  * Created by jhite on 11/26/16.
-
-    9/21 - Commenting out until ready to redo
-
+*/
 public class BandDiscogFragment  extends Fragment {
 
     private static boolean isInflated;
     private static final String TAG = "BandDiscogFragment";
-    private static List<Disc> mDiscs;
+    public static final String ARGS_BAND = "Band Argument";
     private DiscAdapter mAdapter;
     private RecyclerView mDiscRecyclerView;
 
 
-    public static BandDiscogFragment newInstance(Band bandResult) {
+    public static BandDiscogFragment newInstance(String bandID) {
         BandDiscogFragment fragment = new BandDiscogFragment();
-        //load selected Band's discography into an array of disc to use in this fragment
-        mDiscs = bandResult.getDiscs();
-        Log.i(TAG, "total disc count -  " + mDiscs.size());
-
-        //Bundle args = new Bundle();
-       /* args.putSerializable(ARGS_BAND, (Serializable) bandResult);
+        Bundle args = new Bundle();
+        args.putSerializable(ARGS_BAND, bandID);
         Intent intent = new Intent();
         intent.putExtras(args);
-        // close this block
-
 
         return fragment;
     }
@@ -66,14 +58,13 @@ public class BandDiscogFragment  extends Fragment {
         return view;
     }
 
-    /*
-    1-18 - Don't believe this method is neccessary
+
     private void setupAdapter() {
         if (isAdded()) {
             mDiscRecyclerView.setAdapter(new BandDiscogFragment.DiscAdapter(mDiscs));
         }
     }
-    //close this block
+
 
     private class DiscHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
@@ -171,4 +162,3 @@ public class BandDiscogFragment  extends Fragment {
         }
     }
 }
-*/

@@ -1,98 +1,76 @@
+
 package com.hitej.android.metalarchives.metallumobjects.band.bandid;
 
-import java.util.List;
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
 
 public class Band {
 
-    @SerializedName("id")
+    @SerializedName("status")
     @Expose
-    private String id;
-    @SerializedName("details")
+    private String status;
+    @SerializedName("code")
     @Expose
-    private Details details;
-    @SerializedName("band_name")
+    private Integer code;
+    @SerializedName("message")
     @Expose
-    private String bandName;
-    @SerializedName("logo")
+    private String message;
+    @SerializedName("data")
     @Expose
-    private String logo;
-    @SerializedName("photo")
+    private Data data;
+    @SerializedName("hash")
     @Expose
-    private String photo;
-    @SerializedName("bio")
+    private String hash;
+    @SerializedName("donation")
     @Expose
-    private String bio;
-    @SerializedName("discography")
-    @Expose
-    private List<Discography> discography = null;
-    @SerializedName("current_lineup")
-    @Expose
-    private List<CurrentLineup> currentLineup = null;
+    private Donation donation;
 
-    public String getId() {
-        return id;
+    public String getStatus() {
+        return status;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public Details getDetails() {
-        return details;
+    public Integer getCode() {
+        return code;
     }
 
-    public void setDetails(Details details) {
-        this.details = details;
+    public void setCode(Integer code) {
+        this.code = code;
     }
 
-    public String getBandName() {
-        return bandName;
+    public String getMessage() {
+        return message;
     }
 
-    public void setBandName(String bandName) {
-        this.bandName = bandName;
+    public void setMessage(String message) {
+        this.message = message;
     }
 
-    public String getLogo() {
-        return logo;
+    public Data getData() {
+        return data;
     }
 
-    public void setLogo(String logo) {
-        this.logo = logo;
+    public void setData(Data data) {
+        this.data = data;
     }
 
-    public String getPhoto() {
-        return photo;
+    public String getHash() {
+        return hash;
     }
 
-    public void setPhoto(String photo) {
-        this.photo = photo;
+    public void setHash(String hash) {
+        this.hash = hash;
     }
 
-    public String getBio() {
-        return bio;
+    public Donation getDonation() {
+        return donation;
     }
 
-    public void setBio(String bio) {
-        this.bio = bio;
-    }
-
-    public List<Discography> getDiscography() {
-        return discography;
-    }
-
-    public void setDiscography(List<Discography> discography) {
-        this.discography = discography;
-    }
-
-    public List<CurrentLineup> getCurrentLineup() {
-        return currentLineup;
-    }
-
-    public void setCurrentLineup(List<CurrentLineup> currentLineup) {
-        this.currentLineup = currentLineup;
+    public void setDonation(Donation donation) {
+        this.donation = donation;
     }
 
 }

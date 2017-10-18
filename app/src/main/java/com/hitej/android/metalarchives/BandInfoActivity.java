@@ -91,7 +91,8 @@ public class BandInfoActivity extends SingleFragmentActivity {
                         else{
                             getSupportFragmentManager().beginTransaction()
                                     .replace(R.id.fragment_container,
-                                            BandAboutFragment.newInstance())
+                                            BandAboutFragment.newInstance
+                                                    (getIntent().getStringExtra(EXTRA_QUERY_ID)))
                                     .commit();
                             Log.i(TAG, "inflating BandAboutFragment! BandAboutFragment.isInflated =  "
                                     + BandAboutFragment.isInflated());
