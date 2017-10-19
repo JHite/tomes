@@ -1,6 +1,4 @@
 package com.hitej.android.metalarchives;
-//BottomBar from https://github.com/roughike/BottomBar
-
 /*
     Created on 2/16/17
     */
@@ -13,23 +11,27 @@ import android.support.v4.app.Fragment;
 import android.support.v4.content.ContextCompat;
 import android.util.Log;
 
-
-
+import com.hitej.android.metalarchives.metallumobjects.album.albumid.Album;
 
 public class DiscInfoActivity extends SingleFragmentActivity {
 
-    private static final String TAG = "MetalArchivesActivity";
+    private static final String TAG = "DiscInfoActivity";
     private Context mContext = this;
-    //private static Disc mDisc;
+    protected static Album mAlbum;
+    private static String mAlbumId;
+    public static final String EXTRA_DISC_ID = "com.jhite.android.metalarchives.discinfo.discid";
 
-    //holder for DiscInfoFragment
-    //protected static Disc mDiscCursor;
+    public static Intent newIntent(Context context, String discID) {
+        Intent intent = new Intent(context, DiscInfoActivity.class);
+        intent.putExtra(EXTRA_DISC_ID, discID);
 
+        return intent;
+    }
 
-
-    public static Intent newIntent(Context context) {
-        //mDisc = disc;
-        return new Intent(context, DiscInfoActivity.class);
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        mAlbumId = getIntent().getStringExtra(EXTRA_DISC_ID);
     }
 
     @Override
@@ -37,18 +39,8 @@ public class DiscInfoActivity extends SingleFragmentActivity {
         return new DiscInfoFragment().newInstance();
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-
-    }
-
-
     protected void onSavedInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-
     }
-
-
 }
 

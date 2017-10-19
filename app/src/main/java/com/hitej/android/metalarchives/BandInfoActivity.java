@@ -97,11 +97,8 @@ public class BandInfoActivity extends SingleFragmentActivity {
                                     .commit();
                             Log.i(TAG, "inflating BandAboutFragment! BandAboutFragment.isInflated =  "
                                     + BandAboutFragment.isInflated());
-                        }
-                        break;
-
+                        }break;
                     case R.id.bottom_bar_band_discography:
-
                         if(BandDiscogFragment.isInflated())
                             return;
                         else{
@@ -109,13 +106,20 @@ public class BandInfoActivity extends SingleFragmentActivity {
                                     .replace(R.id.fragment_container,
                                             BandDiscogFragment.newInstance(mBandID))
                                     .commit();
-                            Log.i(TAG, "inflating BandAboutFragment! BandAboutFragment.isInflated =  "
+                            Log.i(TAG, "inflating BandDiscogFragment! BandDiscogFragment.isInflated =  "
                                     + BandDiscogFragment.isInflated());
-                             }
-
-
-
-                        break;
+                             }break;
+                    case R.id.bottom_bar_tab_band_members:
+                        if(BandRosterFragment.isInflated())
+                            return;
+                        else{
+                            getSupportFragmentManager().beginTransaction()
+                                    .replace(R.id.fragment_container,
+                                            BandRosterFragment.newInstance())
+                                    .commit();
+                            Log.i(TAG, "inflating BandRosterFragment! BandRosterFragment.isInflated =  "
+                                    + BandRosterFragment.isInflated());
+                        }break;
 
                     default:
 
@@ -146,17 +150,17 @@ public class BandInfoActivity extends SingleFragmentActivity {
             public void onTabSelected(int position) {
                 switch (position){
                     case 0:
-
+                        Log.i(TAG, "Tab # " + position + " clicked");
                         return;
                     case 1:
-
+                        Log.i(TAG, "Tab # " + position + " clicked");
                         return;
                     case 2:
-
+                        Log.i(TAG, "Tab # " + position + " clicked");
                     case 3:
-
+                        Log.i(TAG, "Tab # " + position + " clicked");
                     case 4:
-
+                        Log.i(TAG, "Tab # " + position + " clicked");
                     default:
                         Log.i(TAG, "Tab # " + position + " clicked");
                 }

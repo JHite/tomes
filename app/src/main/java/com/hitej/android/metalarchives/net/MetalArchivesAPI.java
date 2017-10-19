@@ -27,7 +27,8 @@ public interface MetalArchivesAPI {
     @GET("band/{band_id}")
     Observable<Band> getBand(@Path("band_id") String band_id);
 
-    //@GET
+    @GET("album/{album_id}")
+    Observable<Album>getAlbum(@Path("album_id") String album_id);
 
 
 

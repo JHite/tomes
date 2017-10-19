@@ -5,27 +5,71 @@ import com.google.gson.annotations.SerializedName;
 
 public class Album {
 
-    @SerializedName("band")
+    @SerializedName("status")
     @Expose
-    private Band band;
-    @SerializedName("album")
+    private String status;
+    @SerializedName("code")
     @Expose
-    private Album_ album;
+    private Integer code;
+    @SerializedName("message")
+    @Expose
+    private String message;
+    @SerializedName("data")
+    @Expose
+    private Data data;
+    @SerializedName("hash")
+    @Expose
+    private String hash;
+    @SerializedName("donation")
+    @Expose
+    private Donation donation;
 
-    public Band getBand() {
-        return band;
+    public String getStatus() {
+        return status;
     }
 
-    public void setBand(Band band) {
-        this.band = band;
+    public void setStatus(String status) {
+        this.status = status;
     }
 
-    public Album_ getAlbum() {
-        return album;
+    public Integer getCode() {
+        return code;
     }
 
-    public void setAlbum(Album_ album) {
-        this.album = album;
+    public void setCode(Integer code) {
+        this.code = code;
+    }
+
+    public String getMessage() {
+        return message;
+    }
+
+    public void setMessage(String message) {
+        this.message = message;
+    }
+
+    public Data getData() {
+        return data;
+    }
+
+    public void setData(Data data) {
+        this.data = data;
+    }
+
+    public String getHash() {
+        return hash;
+    }
+
+    public void setHash(String hash) {
+        this.hash = hash;
+    }
+
+    public Donation getDonation() {
+        return donation;
+    }
+
+    public void setDonation(Donation donation) {
+        this.donation = donation;
     }
 
 }

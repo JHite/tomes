@@ -93,7 +93,7 @@ public class BandAboutFragment extends Fragment {
         TextView bandInfoText = (TextView)view.findViewById(R.id.band_about_info_textview);
 
         //TODO: 10/19/17 - Query should only should run ONCE per Activity's life.
-        // create state variable and
+        // create boolean variable and only query if true
         query =  new BandInfoQuery(mBandID);
         query.start();
 

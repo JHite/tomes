@@ -1,0 +1,39 @@
+<android.support.v7.widget.CardView
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:cardview="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/fragment_band_roster_item"
+    android:layout_gravity="center"
+    android:layout_width="match_parent"
+    android:layout_height="200dp"
+    cardview:cardCornerRadius="10dp"
+    cardview:cardElevation="10dp"
+    cardview:cardBackgroundColor="@color/colorPrimary"
+    cardview:cardUseCompatPadding="true">
+    <LinearLayout
+        android:orientation="vertical"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/band_roster_name_textview"
+            android:text="@string/band_roster_fragment_name"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/band_roster_instrument_textview"
+            android:text="@string/band_roster_fragment_instrument"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/band_roster_years_textview"
+            android:text="@string/band_roster_fragment_years"/>
+
+    </LinearLayout>
+
+
+</android.support.v7.widget.CardView>

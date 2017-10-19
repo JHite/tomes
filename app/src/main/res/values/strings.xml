@@ -48,6 +48,10 @@
 
     <!-- Strings for DiscInfoSongsFragment -->
 
+    <!-- Strings for BandRosterFragment-->
+    <string name="band_roster_fragment_name">Band Member Name</string>
+    <string name="band_roster_fragment_instrument">Band Member Instrument</string>
+    <string name="band_roster_fragment_years">Band Member Years Active</string>
 
 
 </resources>
