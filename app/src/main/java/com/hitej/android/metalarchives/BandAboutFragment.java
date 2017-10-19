@@ -89,13 +89,11 @@ public class BandAboutFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_band_about, container, false);
-
-        //setInflated to true
         setIsInflated(true);
-
         TextView bandInfoText = (TextView)view.findViewById(R.id.band_about_info_textview);
-        //bandInfoText.setText(mBandDetails.toString());
 
+        //TODO: 10/19/17 - Query should only should run ONCE per Activity's life.
+        // create state variable and
         query =  new BandInfoQuery(mBandID);
         query.start();
 
@@ -122,9 +120,7 @@ public class BandAboutFragment extends Fragment {
         BandAboutFragment.isInflated = isInflated;
     }
 
-    /*Query's "/band/id" endpoint
-       Information such as band details, discog, current lineup obtained here
-    */
+
     private class BandInfoQuery {
 
         static final String BASE_URL = "http://em.wemakesites.net/";

@@ -99,7 +99,7 @@ public class BandInfoActivity extends SingleFragmentActivity {
                                     + BandAboutFragment.isInflated());
                         }
                         break;
-                        /*
+
                     case R.id.bottom_bar_band_discography:
 
                         if(BandDiscogFragment.isInflated())
@@ -107,7 +107,7 @@ public class BandInfoActivity extends SingleFragmentActivity {
                         else{
                             getSupportFragmentManager().beginTransaction()
                                     .replace(R.id.fragment_container,
-                                            BandDiscogFragment.newInstance(mBand))
+                                            BandDiscogFragment.newInstance(mBandID))
                                     .commit();
                             Log.i(TAG, "inflating BandAboutFragment! BandAboutFragment.isInflated =  "
                                     + BandDiscogFragment.isInflated());
@@ -115,7 +115,7 @@ public class BandInfoActivity extends SingleFragmentActivity {
 
 
 
-                        break; */
+                        break;
 
                     default:
 

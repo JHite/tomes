@@ -28,6 +28,8 @@ public class BandDiscogFragment  extends Fragment {
     public static final String ARGS_BAND = "Band Argument";
     private DiscAdapter mAdapter;
     private RecyclerView mDiscRecyclerView;
+    private List<Discography> mDiscList;
+
 
 
     public static BandDiscogFragment newInstance(String bandID) {
@@ -43,6 +45,8 @@ public class BandDiscogFragment  extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        mDiscList = BandInfoActivity.mBand.getData().getDiscography();
     }
 
     @Override
@@ -63,7 +67,7 @@ public class BandDiscogFragment  extends Fragment {
 
     private void setupAdapter() {
         if (isAdded()) {
-            mDiscRecyclerView.setAdapter(new BandDiscogFragment.DiscAdapter(mDiscs));
+            mDiscRecyclerView.setAdapter(mAdapter);
         }
     }
 
@@ -157,7 +161,7 @@ public class BandDiscogFragment  extends Fragment {
 
     public void updateUI(){
         if(mAdapter == null){
-            mAdapter = new DiscAdapter(mDisc);
+            mAdapter = new DiscAdapter(mDiscList);
             mDiscRecyclerView.setAdapter(mAdapter);
         } else{
             //may need more here
