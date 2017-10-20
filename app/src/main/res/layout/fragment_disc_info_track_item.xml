@@ -18,7 +18,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/disc_info_track_name"
+            android:id="@+id/disc_info_song_name"
             android:text="@string/disc_info_fragment_title"/>
 
     </LinearLayout>

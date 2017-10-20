@@ -99,10 +99,9 @@ public class BandDiscogFragment  extends Fragment {
 
         @Override
         public void onClick(View v) {
-            //TODO:7-4-14: Launch DiscInfoActivity with mDisc
             Log.i(TAG, mDisc.getTitle() + "'s Disc clicked");
-            //Intent intent = DiscInfoActivity.newIntent(getContext(), mDisc);
-            //startActivity(intent);
+            Intent intent = DiscInfoActivity.newIntent(getContext(), mDisc.getId());
+            startActivity(intent);
 
 
         }

@@ -17,6 +17,7 @@ import android.widget.TextView;
 import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import com.hitej.android.metalarchives.metallumobjects.album.albumid.Album;
+import com.hitej.android.metalarchives.metallumobjects.album.albumid.Song;
 import com.hitej.android.metalarchives.metallumobjects.band.bandid.Band;
 import com.hitej.android.metalarchives.net.MetalArchivesAPI;
 
@@ -47,69 +48,81 @@ public class DiscInfoFragment extends Fragment{
 
     private RecyclerView mDiscInfoRecyclerView;
     private static boolean isInflated = false;
-    private TrackAdapter mAdapter;
+    private SongAdapter mAdapter;
     private static final String TAG = "DiscInfoFragment";
+    public static final String ARGS_DISC = "Disc Argument";
+    private static String mDiscID;
+    private static Album mAlbum;
+    private static List<Song> mSongList;
 
 
-    public static DiscInfoFragment newInstance(){
-        return new DiscInfoFragment();
+    private static  DiscInfoFragment newInstance(){return new DiscInfoFragment();}
+
+    public static DiscInfoFragment newInstance(String discID){
+        DiscInfoFragment fragment = newInstance();
+        Bundle args = new Bundle();
+        args.putString(ARGS_DISC, discID);
+        fragment.setArguments(args);
+
+        return fragment;
+
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
+
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState){
         View view = inflater.inflate(R.layout.fragment_disc_info, container, false);
-
-        //sets tracklist for recyclerview
-        mTrackList = mDisc.getTrackList();
-
         mDiscInfoRecyclerView = (RecyclerView)
                 view.findViewById(R.id.disc_info_recycler_view);
         mDiscInfoRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         setIsInflated(true);
 
-        updateUI();
+        Log.i(TAG, getArguments().getString(ARGS_DISC) + " is ID query is being ran for");
+        DiscInfoQuery query = new DiscInfoQuery(getArguments().getString(ARGS_DISC));
+        query.start();
 
+        updateUI();
 
         return view;
     }
 
     private void setupAdapter() {
         if (isAdded()) {
-            mDiscInfoRecyclerView.setAdapter(new TrackAdapter(mTrackList));
+            mDiscInfoRecyclerView.setAdapter(new SongAdapter(mSongList));
         }
     }
 
-    private class TrackHolder extends RecyclerView.ViewHolder
+    private class SongHolder extends RecyclerView.ViewHolder
             implements View.OnClickListener {
 
-        private Track mTrack;
+        private Song mSong;
+        private TextView mSongName;
 
-        private TextView mTrackName;
 
-
-        public TrackHolder(View itemView) {
+        public SongHolder(View itemView) {
             super(itemView);
             itemView.setOnClickListener(this);
 
-            mTrackName = (TextView)itemView.findViewById(R.id.disc_info_track_name);
+            mSongName = (TextView)itemView.findViewById(R.id.disc_info_song_name);
 
         }
 
-        public void bindTrack(Track track){
-            mTrack = track;
-            mTrackName.setText(track.getName());
+        public void bindSong(Song song){
+            mSong = song;
+            mSongName.setText(song.getTitle());
 
         }
 
         @Override
         public void onClick(View v) {
-            Log.i(TAG, mTrack.toString() + "'s TrackHolders clicked");
+            Log.i(TAG, mSong.getTitle() + "'s TrackHolders clicked");
             // an extra to show BandAboutFragment
             //Intent intent = BandInfoActivity.newIntent(getContext(), mBand);
             //startActivity(intent);
@@ -119,31 +132,31 @@ public class DiscInfoFragment extends Fragment{
     }
 
 
-    private class TrackAdapter extends RecyclerView.Adapter<TrackHolder> {
+    private class SongAdapter extends RecyclerView.Adapter<SongHolder> {
 
 
-        public TrackAdapter(List<Track> trackItems) {
-              mTrackList = trackItems;
+        public SongAdapter(List<Song> songItems) {
+              mSongList = songItems;
         }
 
 
         @Override
-        public DiscInfoFragment.TrackHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
+        public SongHolder onCreateViewHolder(ViewGroup viewGroup, int viewType) {
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             View view = inflater.inflate(R.layout.fragment_disc_info_track_item, viewGroup, false);
-            return new DiscInfoFragment.TrackHolder(view);
+            return new DiscInfoFragment.SongHolder(view);
         }
 
         @Override
-        public void onBindViewHolder(TrackHolder trackHolder, int position) {
-            Track track = mTrackList.get(position);
-            trackHolder.bindTrack(track);
+        public void onBindViewHolder(SongHolder songHolder, int position) {
+            Song song = mSongList.get(position);
+            songHolder.bindSong(song);
 
         }
 
         @Override
         public int getItemCount() {
-            return mTrackList.size();
+            return mSongList.size();
         }
 
     }
@@ -160,7 +173,7 @@ public class DiscInfoFragment extends Fragment{
     }
     public void updateUI(){
         if(mAdapter == null){
-            mAdapter = new TrackAdapter(mTrackList);
+            mAdapter = new SongAdapter(mSongList);
             mDiscInfoRecyclerView.setAdapter(mAdapter);
         } else{
             //may need more here
@@ -238,24 +251,19 @@ public class DiscInfoFragment extends Fragment{
         private void handleResponse(Album albumResults){
             Log.i(TAG, "Handling response...");
             mAlbum = albumResults;
-            DiscInfoActivity.
+            DiscInfoActivity.mAlbum = albumResults;
 
-            Log.i(TAG, "About Page for Band id" + mBand.getData().getId() +
-                    "loading");
+            Log.i(TAG, "Album Page for Album id" + mAlbum.getData().getAlbum().getId() +
+                    " loading");
+            /*
+            See if notifyDataChange() will handle reloading results when query finished.
+
             TextView bandInfoText = (TextView)getView().findViewById(R.id.band_about_info_textview);
             bandInfoText.setText(mBand.getData().getBio());
+             */
 
-
-            /*
-            mBandDetails = bandResults.getDetails();
-            mBandDiscography = new ArrayList<>(bandResults.getDiscography());
-            List<CurrentLineup> mCurrentLineup = bandResults.getCurrentLineup();
-            Log.i(TAG, mBand.getBandName() + "'s Bio  = " + mBand.getBio());
-
-
-
-            */
-
+            mSongList = mAlbum.getData().getAlbum().getSongs();
+            mAdapter.notifyDataSetChanged();
 
         }
 

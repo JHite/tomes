@@ -31,12 +31,12 @@ public class DiscInfoActivity extends SingleFragmentActivity {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        mAlbumId = getIntent().getStringExtra(EXTRA_DISC_ID);
     }
 
     @Override
     protected Fragment createFragment() {
-        return new DiscInfoFragment().newInstance();
+        mAlbumId = getIntent().getStringExtra(EXTRA_DISC_ID);
+        return new DiscInfoFragment().newInstance(mAlbumId);
     }
 
     protected void onSavedInstanceState(Bundle outState) {
