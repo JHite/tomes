@@ -104,6 +104,8 @@ public class BandSearchResultsFragment extends Fragment {
         setIsInflated(true);
         Log.i(TAG, "FRAGMENT_BAND_SEARCH_RESULTS INFLATED");
 
+        //TODO: Add loading sign while query completes
+
         mResultsRecyclerView =
                 (RecyclerView) view.findViewById(R.id.band_search_results_recycler_view);
         mResultsRecyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -190,6 +192,7 @@ public class BandSearchResultsFragment extends Fragment {
 
         private BandSearchResultsAdapter(List<SearchResult> bandList) {
             mBandResultList = bandList;
+            setHasStableIds(true); // https://stackoverflow.com/questions/30082000/recyclerview-messed-up-data-when-scrolling#
 
         }
 
@@ -211,6 +214,16 @@ public class BandSearchResultsFragment extends Fragment {
         @Override
         public int getItemCount() {
             return mBandResultList.size();
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return position;
         }
 
 

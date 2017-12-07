@@ -23,6 +23,7 @@ import com.hitej.android.metalarchives.net.MetalArchivesAPI;
 
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 
 import io.reactivex.Observable;
@@ -53,7 +54,7 @@ public class DiscInfoFragment extends Fragment{
     public static final String ARGS_DISC = "Disc Argument";
     private static String mDiscID;
     private static Album mAlbum;
-    private static List<Song> mSongList;
+    private static ArrayList<Song> mSongResultsList = new ArrayList<>();
 
 
     private static  DiscInfoFragment newInstance(){return new DiscInfoFragment();}
@@ -95,7 +96,7 @@ public class DiscInfoFragment extends Fragment{
 
     private void setupAdapter() {
         if (isAdded()) {
-            mDiscInfoRecyclerView.setAdapter(new SongAdapter(mSongList));
+            mDiscInfoRecyclerView.setAdapter(new SongAdapter(mSongResultsList));
         }
     }
 
@@ -133,10 +134,11 @@ public class DiscInfoFragment extends Fragment{
 
 
     private class SongAdapter extends RecyclerView.Adapter<SongHolder> {
-
+        private List<Song> mSongList;
 
         public SongAdapter(List<Song> songItems) {
               mSongList = songItems;
+              setHasStableIds(true); // https://stackoverflow.com/questions/30082000/recyclerview-messed-up-data-when-scrolling#
         }
 
 
@@ -145,6 +147,16 @@ public class DiscInfoFragment extends Fragment{
             LayoutInflater inflater = LayoutInflater.from(getActivity());
             View view = inflater.inflate(R.layout.fragment_disc_info_track_item, viewGroup, false);
             return new DiscInfoFragment.SongHolder(view);
+        }
+
+        @Override
+        public long getItemId(int position) {
+            return position;
+        }
+
+        @Override
+        public int getItemViewType(int position) {
+            return position;
         }
 
         @Override
@@ -173,7 +185,7 @@ public class DiscInfoFragment extends Fragment{
     }
     public void updateUI(){
         if(mAdapter == null){
-            mAdapter = new SongAdapter(mSongList);
+            mAdapter = new SongAdapter(mSongResultsList);
             mDiscInfoRecyclerView.setAdapter(mAdapter);
         } else{
             //may need more here
@@ -187,7 +199,8 @@ public class DiscInfoFragment extends Fragment{
         public static final String TAG = "DiscInfoQuery";
         private String queryText = "";
         private final String metalArchivesAPIKey = "f60b07b8-612e-4a3b-95f5-1df3250a72ac";
-        private Album mAlbum;
+        private  Album mAlbum;
+
 
         private DiscInfoQuery(String discID){
             queryText = discID;
@@ -208,8 +221,6 @@ public class DiscInfoFragment extends Fragment{
             // See http://square.github.io/okhttp/3.x/logging-interceptor/ to see the options.
             httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 
-            //TODO: add log to okhttpclient
-            //intercepter code
             OkHttpClient okHttpClient = new OkHttpClient().newBuilder().addInterceptor(new Interceptor() {
                 @Override
                 public okhttp3.Response intercept(Chain chain) throws IOException {
@@ -253,18 +264,13 @@ public class DiscInfoFragment extends Fragment{
             mAlbum = albumResults;
             DiscInfoActivity.mAlbum = albumResults;
 
-            Log.i(TAG, "Album Page for Album id" + mAlbum.getData().getAlbum().getId() +
-                    " loading");
-            /*
-            See if notifyDataChange() will handle reloading results when query finished.
+            mSongResultsList = (ArrayList) mAlbum.getData().getAlbum().getSongs();
+            SongAdapter mAdapter = new SongAdapter(mSongResultsList);
+            mDiscInfoRecyclerView.setAdapter(mAdapter);
 
-            TextView bandInfoText = (TextView)getView().findViewById(R.id.band_about_info_textview);
-            bandInfoText.setText(mBand.getData().getBio());
-             */
+            Log.i(TAG, "Album Page loading");
 
-            mSongList = mAlbum.getData().getAlbum().getSongs();
             mAdapter.notifyDataSetChanged();
-
         }
 
         private void handleError(Throwable e){
